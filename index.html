@@ -6,6 +6,121 @@
     <title>Modern Portfolio</title>
     <style>
         
+        /* Tambahkan CSS ini di bagian atas atau di bawah CSS yang sudah ada */
+
+/* Theme Toggle Button Styles */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    display: flex;
+    gap: 10px;
+    background: rgba(15, 15, 30, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-btn:hover {
+    transform: scale(1.1);
+}
+
+.theme-btn.active {
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
+    transform: scale(1.15);
+}
+
+/* Warna untuk masing-masing tombol */
+.theme-btn.dark {
+    background: #000000;
+    border: 2px solid #ffffff;
+}
+
+.theme-btn.default {
+    background: linear-gradient(135deg, #0c0c1d 0%, #1a0d2e 15%, #16213e 30%, #1e3a5f 45%, #2d3561 60%, #533483 75%, #7209b7 90%, #560bad 100%);
+}
+
+.theme-btn.gray {
+    background: #3a3a3a;
+    border: 2px solid #ffffff;
+}
+
+/* Theme Styles */
+body.dark-theme {
+    background: linear-gradient(135deg, #000000 0%, #111111 50%, #222222 100%);
+}
+
+body.gray-theme {
+    background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 50%, #4a4a4a 100%);
+}
+
+/* Efek transisi untuk perubahan tema */
+body {
+    transition: background 0.5s ease;
+}
+
+/* Adjust navbar untuk tema yang berbeda */
+body.dark-theme .navbar,
+body.gray-theme .navbar {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Adjust section untuk tema yang berbeda */
+body.dark-theme .section,
+body.gray-theme .section {
+    background: transparent;
+}
+
+/* Adjust skill card untuk tema yang berbeda */
+body.dark-theme .skill-card,
+body.gray-theme .skill-card {
+    background: rgba(30, 30, 30, 0.7);
+}
+
+/* Adjust project card untuk tema yang berbeda */
+body.dark-theme .project-card,
+body.gray-theme .project-card {
+    background: rgba(30, 30, 30, 0.7);
+}
+
+/* Adjust modal untuk tema yang berbeda */
+body.dark-theme .modal-content,
+body.gray-theme .modal-content {
+    background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
+}
+
+/* Adjust footer untuk tema yang berbeda */
+body.dark-theme .footer,
+body.gray-theme .footer {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: 80px;
+        right: 20px;
+    }
+    
+    .theme-btn {
+        width: 35px;
+        height: 35px;
+    }
+}
+
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +129,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c0c1d 0%, #1a0d2e 50%, #16213e 100%);
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a0d2e 15%, #16213e 30%, #1e3a5f 45%, #2d3561 60%, #533483 75%, #7209b7 90%, #560bad 100%);
             color: #ffffff;
             overflow-x: hidden;
         }
@@ -176,51 +291,875 @@
         }
 
         /* About Section */
-        .about {
-            background: rgba(15, 15, 30, 0.3);
-            backdrop-filter: blur(10px);
-        }
 
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
+/* Ubah CSS About Section menjadi seperti ini */
 
-        .about-text h2 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #8b5cf6;
-        }
+/* Tambahkan CSS ini di bagian About Section atau di tempat yang sesuai */
 
-        .about-text p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            opacity: 0.9;
-        }
+/* About Text Animation */
+.about-text h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #8b5cf6;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
 
-        .about-image {
-            position: relative;
-            text-align: center;
-        }
+.about-text p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
 
-        .profile-img {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid rgba(139, 92, 246, 0.3);
-            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
-            transition: all 0.3s ease;
-        }
+.about-text p:nth-of-type(1) {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease 0.3s forwards;
+}
 
-        .profile-img:hover {
-            transform: scale(1.1);
-            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.5);
-        }
+.about-text p:nth-of-type(2) {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease 0.6s forwards;
+}
+
+/* Highlight effect for keywords */
+.highlight {
+    background: linear-gradient(120deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+    animation: highlightExpand 1s ease 1s forwards;
+}
+
+/* Typing effect for about text */
+.typing-text {
+    overflow: hidden;
+    border-right: 2px solid #8b5cf6;
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+    display: inline-block;
+    max-width: fit-content;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes highlightExpand {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink-caret {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #8b5cf6;
+    }
+}
+
+/* Add some decorative elements */
+.about-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #8b5cf6, transparent);
+    border-radius: 2px;
+    opacity: 0;
+    animation: slideInLeft 0.8s ease 0.2s forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .about-text h2 {
+        font-size: 2.2rem;
+    }
+    
+    .about-text p {
+        font-size: 1rem;
+    }
+    
+    .typing-text {
+        font-size: 0.9rem;
+    }
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.about-text {
+    order: 1; /* Pastikan teks di kiri */
+}
+
+.about-image {
+    order: 2; /* Pastikan gambar di kanan */
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 30px 60px rgba(139, 92, 246, 0.5);
+}
+
+/* Skill Icons Orbit Popup */
+.skill-orbit-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.about-image:hover .skill-orbit-popup {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Orbit Container */
+.orbit-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    animation: rotateOrbit 20s linear infinite;
+}
+
+/* Pause animation on hover */
+.about-image:hover .orbit-container {
+    animation-play-state: paused;
+}
+
+@keyframes rotateOrbit {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Ubah CSS Skill Icons Orbit menjadi seperti ini */
+
+/* Skill Icons Orbit Popup */
+.skill-orbit-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.about-image:hover .skill-orbit-popup {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Orbit Container */
+.orbit-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+}
+
+/* Individual Skill Icon in Orbit */
+.orbit-skill {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: rgba(15, 15, 30, 0.8);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: scale(0);
+}
+
+/* Fade in animation for each skill icon */
+.about-image:hover .orbit-skill:nth-child(1) {
+    animation: fadeInScale 0.5s ease forwards;
+    animation-delay: 0.1s;
+}
+
+.about-image:hover .orbit-skill:nth-child(2) {
+    animation: fadeInScale 0.5s ease forwards;
+    animation-delay: 0.2s;
+}
+
+.about-image:hover .orbit-skill:nth-child(3) {
+    animation: fadeInScale 0.5s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.about-image:hover .orbit-skill:nth-child(4) {
+    animation: fadeInScale 0.5s ease forwards;
+    animation-delay: 0.4s;
+}
+
+.about-image:hover .orbit-skill:nth-child(5) {
+    animation: fadeInScale 0.5s ease forwards;
+    animation-delay: 0.5s;
+}
+
+.about-image:hover .orbit-skill:nth-child(6) {
+    animation: fadeInScale 0.5s ease forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.orbit-skill:hover {
+    transform: scale(1.2);
+    background: rgba(139, 92, 246, 0.2);
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+}
+
+.orbit-skill img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+/* Position each skill icon in a perfect circle */
+.orbit-skill:nth-child(1) {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+}
+
+.orbit-skill:nth-child(2) {
+    top: 25%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.orbit-skill:nth-child(3) {
+    bottom: 25%;
+    right: 0;
+    transform: translateY(50%);
+}
+
+.orbit-skill:nth-child(4) {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+}
+
+.orbit-skill:nth-child(5) {
+    bottom: 25%;
+    left: 0;
+    transform: translateY(50%);
+}
+
+.orbit-skill:nth-child(6) {
+    top: 25%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+/* Add labels below each skill icon */
+.skill-label {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.orbit-skill:hover .skill-label {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .skill-orbit-popup {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .orbit-skill {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .orbit-skill img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .skill-label {
+        font-size: 0.6rem;
+        bottom: -20px;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .about-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .about-text,
+    .about-image {
+        order: initial; /* Reset order di mobile */
+    }
+    
+    .skill-orbit-popup {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .orbit-skill {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .orbit-skill img {
+        width: 40px;
+        height: 40px;
+    }
+}
 
         /* Skills Section */
+
+        /* Tambahkan CSS ini di bagian Skills Section */
+
+        /* Tambahkan CSS ini di bagian Skills Section */
+
+/* Tambahkan CSS ini di bagian Skills Section */
+
+/* Skills Carousel Container */
+.skills-carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.skills-carousel {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    cursor: grab;
+}
+
+.skills-carousel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.skills-carousel.dragging {
+    cursor: grabbing;
+}
+
+/* Skill Card Styles */
+.skill-card {
+    background: rgba(15, 15, 30, 0.5);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 280px;
+    flex-shrink: 0;
+}
+
+.skill-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+}
+
+.skill-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.skill-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.skill-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #8b5cf6;
+}
+
+/* Navigation Arrows */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.carousel-arrow {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    pointer-events: all;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-arrow:hover {
+    background: rgba(139, 92, 246, 0.4);
+    transform: scale(1.1);
+}
+
+.carousel-arrow svg {
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .skill-card {
+        min-width: 250px;
+        padding: 20px;
+    }
+    
+    .skill-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .skill-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .carousel-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Skills Carousel Container */
+.skills-carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.skills-carousel {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    cursor: grab;
+}
+
+.skills-carousel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.skills-carousel.dragging {
+    cursor: grabbing;
+}
+
+/* Skill Card Styles */
+.skill-card {
+    background: rgba(15, 15, 30, 0.5);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 280px;
+    flex-shrink: 0;
+}
+
+.skill-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+}
+
+.skill-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.skill-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.skill-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #8b5cf6;
+}
+
+/* Navigation Arrows */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.carousel-arrow {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    pointer-events: all;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-arrow:hover {
+    background: rgba(139, 92, 246, 0.4);
+    transform: scale(1.1);
+}
+
+.carousel-arrow svg {
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .skill-card {
+        min-width: 250px;
+        padding: 20px;
+    }
+    
+    .skill-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .skill-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .carousel-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Skills Carousel Container */
+.skills-carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.skills-carousel {
+    display: flex;
+    gap: 30px;
+    will-change: transform;
+    cursor: grab;
+}
+
+.skills-carousel.dragging {
+    cursor: grabbing;
+}
+
+/* Skill Card Styles */
+.skill-card {
+    background: rgba(15, 15, 30, 0.5);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 280px;
+    flex-shrink: 0;
+}
+
+.skill-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+}
+
+.skill-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.skill-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.skill-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #8b5cf6;
+}
+
+/* Navigation Dots */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #8b5cf6;
+    transform: scale(1.3);
+}
+
+/* Navigation Arrows */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.carousel-arrow {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    pointer-events: all;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-arrow:hover {
+    background: rgba(139, 92, 246, 0.4);
+    transform: scale(1.1);
+}
+
+.carousel-arrow svg {
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .skill-card {
+        min-width: 250px;
+        padding: 20px;
+    }
+    
+    .skill-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .skill-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .carousel-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -353,6 +1292,90 @@
         }
 
         /* Projects Section */
+
+        /* Tambahkan CSS ini di bagian Project Section */
+
+.project-content {
+    position: relative;
+    padding: 25px 25px 80px; /* Tambahkan padding bawah untuk ruang tombol */
+}
+
+.project-buttons {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
+    display: flex;
+    gap: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card:hover .project-buttons {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Animasi untuk tombol individual */
+.project-button {
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    transition-delay: 0.1s;
+}
+
+.project-card:hover .project-button:first-child {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 0.1s;
+}
+
+.project-card:hover .project-button:last-child {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 0.2s;
+}
+
+/* Efek hover tambahan untuk project card */
+.project-card {
+    transition: all 0.4s ease;
+    transform-origin: center bottom;
+}
+
+.project-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .project-content {
+        padding: 25px 25px 100px; /* Lebih banyak ruang di mobile */
+    }
+    
+    .project-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* Di mobile, tombol selalu terlihat */
+    .project-buttons {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        position: static;
+        margin-top: 20px;
+    }
+    
+    .project-button {
+        transform: none;
+        opacity: 1;
+    }
+}
+
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -364,7 +1387,6 @@
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.3s ease;
-            cursor: pointer;
         }
 
         .project-card:hover {
@@ -386,6 +1408,69 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: #8b5cf6;
+        }
+
+        .project-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .project-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-button {
+            background: linear-gradient(135deg, #333333, #555555);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-button:hover {
+            background: linear-gradient(135deg, #444444, #666666);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #8b5cf6, #7209b7);
+            color: #ffffff;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            background: linear-gradient(135deg, #9d6ff7, #8209c7);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .project-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .project-button:hover::before {
+            left: 100%;
         }
 
         /* Social Icons */
@@ -530,6 +1615,27 @@
             transform: scale(1.3);
         }
 
+        /* Footer with Copyright */
+        .footer {
+            background: rgba(15, 15, 30, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            margin-top: 50px;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            color: #ffffff;
+        }
+
+        .copyright span {
+            color: #8b5cf6;
+            font-weight: 500;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -573,6 +1679,15 @@
                 width: 60px;
                 height: 60px;
             }
+
+            .project-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         @keyframes ripple {
@@ -604,6 +1719,13 @@
         <div class="scroll-dot" data-section="4"></div>
     </div>
 
+    <!-- Theme Toggle Buttons -->
+<div class="theme-toggle">
+    <button class="theme-btn dark" title="Dark Theme" onclick="setTheme('dark')"></button>
+    <button class="theme-btn default active" title="Default Theme" onclick="setTheme('default')"></button>
+    <button class="theme-btn gray" title="Gray Theme" onclick="setTheme('gray')"></button>
+</div>
+
     <!-- Section 1: Hero/Introduction -->
     <section class="section active hero" id="home">
         <div class="floating-elements">
@@ -622,23 +1744,57 @@
         </div>
     </section>
 
-    <!-- Section 2: About -->
-    <section class="section about" id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>About Me</h2>
-                    <p>Saya adalah seorang developer yang passionate dalam menciptakan pengalaman digital yang memukau. Dengan pengalaman 1 tahun di bidang web development, saya telah menangani berbagai proyek mulai dari website sederhana hingga aplikasi web kompleks.</p>
-                    <br>
-                    <p>Keahlian saya meliputi backend development, dengan spesialisasi dalam JavaScript, React, Node.js, dan berbagai teknologi modern lainnya.</p>
-                </div>
-                <div class="about-image">
-                    <img src="hanako.jpg" alt="Profile" class="profile-img">
+<!-- Ubah bagian About Section menjadi seperti ini -->
+<section class="section about" id="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>About Me</h2>
+                <p>Saya adalah seorang developer yang passionate dalam menciptakan pengalaman digital yang memukau. Dengan pengalaman 1 tahun di bidang web development, saya telah menangani berbagai proyek mulai dari website sederhana hingga aplikasi web kompleks.</p>
+                <br>
+                <p>Keahlian saya meliputi backend development, dengan spesialisasi dalam JavaScript, React, Node.js, dan berbagai teknologi modern lainnya.</p>
+            </div>
+            <div class="about-image">
+                <img src="hanako.jpg" alt="Profile" class="profile-img">
+                
+                <!-- Skill Icons Orbit Popup -->
+                <div class="skill-orbit-popup">
+                    <div class="orbit-container">
+                        <!-- Photoshop Icon -->
+                        <div class="orbit-skill">
+                            <img src="data:image/png;base64,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" alt="Photoshop">
+                        </div>
+                        
+                        <!-- CapCut Icon -->
+                        <div class="orbit-skill">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=" alt="CapCut">
+                        </div>
+                        
+                        <!-- Python Icon -->
+                        <div class="orbit-skill">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png" alt="Python">
+                        </div>
+                        
+                        <!-- HTML Icon -->
+                        <div class="orbit-skill">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png" alt="HTML">
+                        </div>
+                        
+                        <!-- CSS Icon -->
+                        <div class="orbit-skill">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png" alt="CSS">
+                        </div>
+                        
+                        <!-- JavaScript Icon (tambahan) -->
+                        <div class="orbit-skill">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/120px-JavaScript-logo.png" alt="JavaScript">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-
+    </div>
+</section>
     <!-- Section 3: Skills -->
     <section class="section" id="skills">
         <div class="container">
@@ -646,17 +1802,24 @@
             <div class="skills-grid">
                 <div class="skill-card" onclick="showSkillModal('Photoshop', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Photoshop_CC_icon.png/120px-Photoshop_CC_icon.png', 'Saya memiliki keahlian dalam menggunakan Adobe Photoshop untuk editing foto, desain grafis, dan manipulasi gambar. Dengan pengalaman lebih dari 2 tahun, saya dapat membuat desain yang menarik dan profesional.')">
                     <div class="skill-icon">
-                        <img src="data:image/jpeg;base64,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" alt="Photoshop">
+                        <img src="data:image/png;base64,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" alt="Photoshop">
                     </div>
-                    <h3>Bloodstrike</h3>
-                    <p>Sebuah permainan battle royale</p>
+                    <h3>Photoshop</h3>
+                    <p>Foto editing</p>
                 </div>
-                <div class="skill-card" onclick="showSkillModal('CapCut', 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/CapCut_logo.svg/120px-CapCut_logo.svg.png', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')">
+                <div class="skill-card" onclick="showSkillModal('CapCut', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')">
                     <div class="skill-icon">
                         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=" alt="CapCut">
                     </div>
                     <h3>CapCut</h3>
                     <p>Video editing & content creation</p>
+                </div>
+                                <div class="skill-card" onclick="showSkillModal('JavaScript', 'data:image/png;base64,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', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')">
+                    <div class="skill-icon">
+                        <img src="data:image/png;base64,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" alt="JavaScript">
+                    </div>
+                    <h3>JavaScript</h3>
+                    <p>Backend development</p>
                 </div>
                 <div class="skill-card" onclick="showSkillModal('Python', 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png', 'Saya memiliki pemahaman yang kuat dalam pemrograman Python, termasuk penggunaan library seperti Django, Flask, NumPy, dan Pandas. Saya telah mengembangkan berbagai aplikasi web dan tools otomatisasi menggunakan Python.')">
                     <div class="skill-icon">
@@ -691,8 +1854,12 @@
                 <div class="project-card">
                     <img src="Cashier.png" alt="Project 1" class="project-img">
                     <div class="project-content">
-                        <h3>Cahsier Restaurant</h3>
+                        <h3>Cashier Restaurant</h3>
                         <p>Cashier dengan fitur lengkap, payment gateway, dan dashboard admin.</p>
+                        <div class="project-buttons">
+                            <a href="https://github.com/Apakah1020/Cashier-Restaurant" target="_blank" class="project-button code-button">Code</a>
+                            <a href="https://cashier-restaurant.vercel.app/" target="_blank" class="project-button demo-button">Demo</a>
+                        </div>
                     </div>
                 </div>
                 <div class="project-card">
@@ -700,6 +1867,10 @@
                     <div class="project-content">
                         <h3>Calculator</h3>
                         <p>Sebuah web Calculator dengan beragam fitur</p>
+                        <div class="project-buttons">
+                            <a href="https://github.com/Apakah1020/Calculator" target="_blank" class="project-button code-button">Code</a>
+                            <a href="https://calculator-zeta-tan-40.vercel.app/" target="_blank" class="project-button demo-button">Demo</a>
+                        </div>
                     </div>
                 </div>
                 <div class="project-card">
@@ -707,6 +1878,10 @@
                     <div class="project-content">
                         <h3>Learning Management System</h3>
                         <p>Platform pembelajaran online dengan fitur video streaming dan quiz interaktif.</p>
+                        <div class="project-buttons">
+                            <a href="https://github.com/Apakah1020/learning-management-system" target="_blank" class="project-button code-button">Code</a>
+                            <a href="https://lms-platform.vercel.app" target="_blank" class="project-button demo-button">Demo</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -732,7 +1907,7 @@
                 
                 <div class="social-icon" onclick="openLink('https://wa.me/6285715801750')" title="WhatsApp">
                     <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.434 3.488"/>
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 001-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 001-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.434 3.488"/>
                     </svg>
                 </div>
                 
@@ -748,9 +1923,16 @@
                     </svg>
                 </div>
             </div>
-            <p class="contact-text">come on contact me</p>
+            <p class="contact-text">come on contact me, i need your help to improve my website</p>
         </div>
     </section>
+
+    <!-- Footer with Copyright -->
+    <footer class="footer">
+        <div class="container">
+            <p class="copyright">&copy; <span id="currentYear"></span> <span>Inayattullah Yoga F</span>. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Modal for Skill Description -->
     <div id="skillModal" class="modal">
@@ -764,257 +1946,8 @@
         </div>
     </div>
 
-    <script>
-        // Smooth scroll behavior
-        let currentSection = 0;
-        const sections = document.querySelectorAll('.section');
-        const scrollDots = document.querySelectorAll('.scroll-dot');
-        const navLinks = document.querySelectorAll('.nav-links a');
-
-        // Initialize
-        window.addEventListener('load', () => {
-            updateActiveSection(0);
-        });
-
-        // Scroll event listener
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                const scrollTop = window.pageYOffset;
-                const windowHeight = window.innerHeight;
-                
-                sections.forEach((section, index) => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.offsetHeight;
-                    
-                    if (scrollTop >= sectionTop - windowHeight / 2 && scrollTop < sectionTop + sectionHeight - windowHeight / 2) {
-                        updateActiveSection(index);
-                    }
-                });
-            }, 10);
-        });
-
-        // Update active section
-        function updateActiveSection(index) {
-            currentSection = index;
-            
-            // Update sections
-            sections.forEach((section, i) => {
-                section.classList.toggle('active', i <= index);
-            });
-            
-            // Update scroll dots
-            scrollDots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-        }
-
-        // Scroll dot click handlers
-        scrollDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                sections[index].scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Navigation link click handlers
-        navLinks.forEach((link) => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Open contact links
-        function openLink(url) {
-            window.open(url, '_blank');
-        }
+    <script src="./buatulangan.js">
         
-        function showInfo() {
-            const emoji = document.querySelector('.hero-emoji');
-            const heroContent = document.querySelector('.hero-content');
-            
-            // Create info popup effect
-            emoji.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            emoji.style.zIndex = '10';
-            
-            setTimeout(() => {
-                emoji.style.transform = 'translate(-50%, -50%) scale(1)';
-                emoji.style.zIndex = '1';
-                
-                // Add sparkle effect
-                createSparkles();
-            }, 300);
-        }
-
-        // Create sparkle animation
-        function createSparkles() {
-            const hero = document.querySelector('.hero');
-            const sparkleCount = 20;
-            
-            for (let i = 0; i < sparkleCount; i++) {
-                setTimeout(() => {
-                    const sparkle = document.createElement('div');
-                    sparkle.innerHTML = '✨';
-                    sparkle.style.position = 'absolute';
-                    sparkle.style.left = Math.random() * 100 + '%';
-                    sparkle.style.top = Math.random() * 100 + '%';
-                    sparkle.style.fontSize = '1.5rem';
-                    sparkle.style.pointerEvents = 'none';
-                    sparkle.style.animation = 'sparkleFloat 2s ease-out forwards';
-                    
-                    hero.appendChild(sparkle);
-                    
-                    setTimeout(() => {
-                        sparkle.remove();
-                    }, 2000);
-                }, i * 100);
-            }
-        }
-
-        // Add sparkle animation keyframes
-        const sparkleStyle = document.createElement('style');
-        sparkleStyle.textContent = `
-            @keyframes sparkleFloat {
-                0% {
-                    opacity: 0;
-                    transform: translateY(0) scale(0);
-                }
-                50% {
-                    opacity: 1;
-                    transform: translateY(-50px) scale(1);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translateY(-100px) scale(0);
-                }
-            }
-        `;
-        document.head.appendChild(sparkleStyle);
-
-        // Parallax effect for floating elements
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.floating-element');
-            
-            parallaxElements.forEach((element, index) => {
-                const speed = 0.5 + (index * 0.1);
-                element.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-
-        // Skill card hover effect
-        const skillCards = document.querySelectorAll('.skill-card');
-        skillCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.background = 'rgba(139, 92, 246, 0.1)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.background = 'rgba(15, 15, 30, 0.5)';
-            });
-        });
-
-        // Project card click effect
-        const projectCards = document.querySelectorAll('.project-card');
-        projectCards.forEach(card => {
-            card.addEventListener('click', () => {
-                card.style.transform = 'translateY(-10px) scale(1.02)';
-                setTimeout(() => {
-                    card.style.transform = 'translateY(-10px) scale(1)';
-                }, 200);
-            });
-        });
-
-        // Contact card click effects
-        const socialIcons = document.querySelectorAll('.social-icon');
-        socialIcons.forEach(icon => {
-            icon.addEventListener('mouseenter', () => {
-                icon.style.transform = 'translateY(-5px) scale(1.1)';
-            });
-            
-            icon.addEventListener('mouseleave', () => {
-                icon.style.transform = 'translateY(0) scale(1)';
-            });
-            
-            icon.addEventListener('click', function() {
-                // Add click ripple effect
-                const ripple = document.createElement('div');
-                ripple.style.position = 'absolute';
-                ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(139, 92, 246, 0.5)';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.animation = 'ripple 0.6s linear';
-                ripple.style.left = '50%';
-                ripple.style.top = '50%';
-                ripple.style.width = '20px';
-                ripple.style.height = '20px';
-                ripple.style.marginLeft = '-10px';
-                ripple.style.marginTop = '-10px';
-                
-                this.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            });
-        });
-
-        // Skill modal functionality
-        const modal = document.getElementById('skillModal');
-        const modalIcon = document.getElementById('modalIcon');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDescription = document.getElementById('modalDescription');
-        const closeBtn = document.querySelector('.close');
-
-        function showSkillModal(title, iconUrl, description) {
-            modalTitle.textContent = title;
-            modalDescription.textContent = description;
-            modalIcon.innerHTML = `<img src="${iconUrl}" alt="${title}">`;
-            modal.style.display = 'block';
-        }
-
-        closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-
-        // Add typing effect to hero text and hide emoji after delay
-        window.addEventListener('load', () => {
-            const heroTitle = document.querySelector('.hero h1');
-            const heroEmoji = document.querySelector('.hero-emoji');
-            const originalText = heroTitle.textContent;
-            heroTitle.textContent = '';
-            
-            let i = 0;
-            const typeWriter = () => {
-                if (i < originalText.length) {
-                    heroTitle.textContent += originalText.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 100);
-                }
-            };
-            
-            setTimeout(typeWriter, 500);
-            
-            // Hide emoji after 2 seconds with fade animation
-            setTimeout(() => {
-                heroEmoji.style.transition = 'all 0.5s ease';
-                heroEmoji.style.opacity = '0';
-                heroEmoji.style.transform = 'translate(-50%, -50%) scale(0)';
-                
-                setTimeout(() => {
-                    heroEmoji.style.display = 'none';
-                }, 500);
-            }, 2000);
-        });
     </script>
 </body>
 </html>
