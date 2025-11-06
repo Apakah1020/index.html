@@ -1,1953 +1,2551 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modern Portfolio</title>
     <style>
-        
-        /* Tambahkan CSS ini di bagian atas atau di bawah CSS yang sudah ada */
+      /* Background Bintang */
+      #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
 
-/* Theme Toggle Button Styles */
-.theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1001;
-    display: flex;
-    gap: 10px;
-    background: rgba(15, 15, 30, 0.8);
-    backdrop-filter: blur(10px);
-    border-radius: 30px;
-    padding: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+      /* Buku Tamu dan Ulasan Styles */
+      .guestbook-form,
+      .reviews-form {
+        max-width: 600px;
+        margin: 0 auto 3rem;
+        background: rgba(15, 15, 30, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: rgba(139, 92, 246, 0.6);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, #8b5cf6, #7209b7);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+
+      .submit-btn:hover {
+        background: linear-gradient(135deg, #9d6ff7, #8209c7);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+      }
+
+      .guestbook-entries,
+      .reviews-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .guestbook-entry,
+      .review-item {
+        background: rgba(15, 15, 30, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 15px;
+        padding: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .guestbook-entry:hover,
+      .review-item:hover {
+        transform: translateY(-5px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 15px 30px rgba(139, 92, 246, 0.2);
+      }
+
+      .guestbook-entry h4,
+      .review-item h4 {
+        color: #8b5cf6;
+        margin-bottom: 10px;
+      }
+
+      .guestbook-entry p,
+      .review-item p {
+        opacity: 0.9;
+        line-height: 1.6;
+      }
+
+      .review-rating {
+        color: #ffd700;
+        margin-bottom: 10px;
+      }
+
+      .review-date {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        margin-top: 10px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .guestbook-form,
+        .reviews-form {
+          padding: 20px;
+        }
+
+        .guestbook-entries,
+        .reviews-list {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Theme Toggle Button Styles */
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1001;
+        display: flex;
+        gap: 10px;
+        background: rgba(15, 15, 30, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        padding: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .theme-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .theme-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .theme-btn.active {
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
+        transform: scale(1.15);
+      }
+
+      /* Warna untuk masing-masing tombol */
+      .theme-btn.dark {
+        background: #000000;
+        border: 2px solid #ffffff;
+      }
+
+      .theme-btn.default {
+        background: linear-gradient(
+          135deg,
+          #0c0c1d 0%,
+          #1a0d2e 15%,
+          #16213e 30%,
+          #1e3a5f 45%,
+          #2d3561 60%,
+          #533483 75%,
+          #7209b7 90%,
+          #560bad 100%
+        );
+      }
+
+      .theme-btn.gray {
+        background: #3a3a3a;
+        border: 2px solid #ffffff;
+      }
+
+      /* Theme Styles */
+      body.dark-theme {
+        background: linear-gradient(
+          135deg,
+          #000000 0%,
+          #111111 50%,
+          #222222 100%
+        );
+      }
+
+      body.gray-theme {
+        background: linear-gradient(
+          135deg,
+          #2d2d2d 0%,
+          #3a3a3a 50%,
+          #4a4a4a 100%
+        );
+      }
+
+      /* Efek transisi untuk perubahan tema */
+      body {
+        transition: background 0.5s ease;
+      }
+
+      /* Adjust navbar untuk tema yang berbeda */
+      body.dark-theme .navbar,
+      body.gray-theme .navbar {
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      /* Adjust section untuk tema yang berbeda */
+      body.dark-theme .section,
+      body.gray-theme .section {
+        background: transparent;
+      }
+
+      /* Adjust skill card untuk tema yang berbeda */
+      body.dark-theme .skill-card,
+      body.gray-theme .skill-card {
+        background: rgba(30, 30, 30, 0.7);
+      }
+
+      /* Adjust project card untuk tema yang berbeda */
+      body.dark-theme .project-card,
+      body.gray-theme .project-card {
+        background: rgba(30, 30, 30, 0.7);
+      }
+
+      /* Adjust modal untuk tema yang berbeda */
+      body.dark-theme .modal-content,
+      body.gray-theme .modal-content {
+        background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
+      }
+
+      /* Adjust footer untuk tema yang berbeda */
+      body.dark-theme .footer,
+      body.gray-theme .footer {
+        background: rgba(0, 0, 0, 0.7);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .theme-toggle {
+          top: 80px;
+          right: 20px;
+        }
+
+        .theme-btn {
+          width: 35px;
+          height: 35px;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0c0c1d 0%,
+          #1a0d2e 15%,
+          #16213e 30%,
+          #1e3a5f 45%,
+          #2d3561 60%,
+          #533483 75%,
+          #7209b7 90%,
+          #560bad 100%
+        );
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+
+      /* Modal untuk Detail Ulasan */
+#reviewModal .modal-content {
+    max-width: 700px;
 }
 
-.theme-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
+.review-detail {
+    padding: 20px 0;
+}
+
+.review-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    padding-bottom: 10px;
+}
+
+.review-detail-header h3 {
+    margin: 0;
+    color: #8b5cf6;
+    font-size: 1.5rem;
+}
+
+.review-detail-rating {
+    color: #ffd700;
+    font-size: 1.2rem;
+}
+
+.review-detail-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.review-detail-date {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    text-align: right;
+}
+
+/* Section Buku Tamu Awal */
+#guestbook {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(12, 12, 29, 0.9) 0%, rgba(26, 13, 46, 0.9) 15%, rgba(22, 33, 62, 0.9) 30%, rgba(30, 58, 95, 0.9) 45%, rgba(45, 53, 97, 0.9) 60%, rgba(83, 52, 131, 0.9) 75%, rgba(114, 9, 183, 0.9) 90%, rgba(86, 11, 173, 0.9) 100%);
+}
+
+.section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.skip-btn {
+    background: transparent;
+    color: #8b5cf6;
+    border: 1px solid rgba(139, 92, 246, 0.5);
+    border-radius: 10px;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.theme-btn:hover {
-    transform: scale(1.1);
+.skip-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.8);
 }
 
-.theme-btn.active {
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
-    transform: scale(1.15);
+/* Section Daftar Tamu */
+#guestbook-list {
+    padding: 100px 50px;
 }
 
-/* Warna untuk masing-masing tombol */
-.theme-btn.dark {
-    background: #000000;
-    border: 2px solid #ffffff;
+/* Tombol untuk melihat detail */
+.view-detail-btn {
+    background: rgba(139, 92, 246, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    display: inline-block;
 }
 
-.theme-btn.default {
-    background: linear-gradient(135deg, #0c0c1d 0%, #1a0d2e 15%, #16213e 30%, #1e3a5f 45%, #2d3561 60%, #533483 75%, #7209b7 90%, #560bad 100%);
-}
-
-.theme-btn.gray {
-    background: #3a3a3a;
-    border: 2px solid #ffffff;
-}
-
-/* Theme Styles */
-body.dark-theme {
-    background: linear-gradient(135deg, #000000 0%, #111111 50%, #222222 100%);
-}
-
-body.gray-theme {
-    background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 50%, #4a4a4a 100%);
-}
-
-/* Efek transisi untuk perubahan tema */
-body {
-    transition: background 0.5s ease;
-}
-
-/* Adjust navbar untuk tema yang berbeda */
-body.dark-theme .navbar,
-body.gray-theme .navbar {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-/* Adjust section untuk tema yang berbeda */
-body.dark-theme .section,
-body.gray-theme .section {
-    background: transparent;
-}
-
-/* Adjust skill card untuk tema yang berbeda */
-body.dark-theme .skill-card,
-body.gray-theme .skill-card {
-    background: rgba(30, 30, 30, 0.7);
-}
-
-/* Adjust project card untuk tema yang berbeda */
-body.dark-theme .project-card,
-body.gray-theme .project-card {
-    background: rgba(30, 30, 30, 0.7);
-}
-
-/* Adjust modal untuk tema yang berbeda */
-body.dark-theme .modal-content,
-body.gray-theme .modal-content {
-    background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
-}
-
-/* Adjust footer untuk tema yang berbeda */
-body.dark-theme .footer,
-body.gray-theme .footer {
-    background: rgba(0, 0, 0, 0.7);
+.view-detail-btn:hover {
+    background: rgba(139, 92, 246, 0.4);
+    border-color: rgba(139, 92, 246, 0.6);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .theme-toggle {
-        top: 80px;
-        right: 20px;
+    .review-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
     
-    .theme-btn {
-        width: 35px;
-        height: 35px;
+    .review-detail-rating {
+        margin-top: 5px;
     }
 }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      /* Dynamic Island Navbar */
+      .navbar {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(15, 15, 30, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 40px;
+        padding: 15px 30px;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c0c1d 0%, #1a0d2e 15%, #16213e 30%, #1e3a5f 45%, #2d3561 60%, #533483 75%, #7209b7 90%, #560bad 100%);
-            color: #ffffff;
-            overflow-x: hidden;
-        }
+      .navbar:hover {
+        background: rgba(15, 15, 30, 0.9);
+        transform: translateX(-50%) scale(1.05);
+      }
 
-        /* Dynamic Island Navbar */
-        .navbar {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 15, 30, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 15px 30px;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
+      .nav-links {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+      }
 
-        .navbar:hover {
-            background: rgba(15, 15, 30, 0.9);
-            transform: translateX(-50%) scale(1.05);
-        }
+      .nav-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+      }
 
-        .nav-links {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-        }
+      .nav-links a:hover {
+        color: #8b5cf6;
+      }
 
-        .nav-links a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+        transition: width 0.3s ease;
+      }
 
-        .nav-links a:hover {
-            color: #8b5cf6;
-        }
+      .nav-links a:hover::after {
+        width: 100%;
+      }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Section Styling */
-        .section {
-            min-height: 100vh;
-            padding: 100px 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 1s ease;
-        }
-
-        .section.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            position: relative;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes textGlow {
-            from {
-                text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-            }
-            to {
-                text-shadow: 0 0 30px rgba(139, 92, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.5);
-            }
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            opacity: 0.8;
-            margin-bottom: 2rem;
-        }
-
-        .hero-emoji {
-            position: absolute;
-            font-size: 8rem;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            animation: waveHand 2s ease-in-out infinite;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .hero-emoji:hover {
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-
-        @keyframes waveHand {
-            0%, 100% { transform: translate(-50%, -50%) rotate(-10deg); }
-            50% { transform: translate(-50%, -50%) rotate(10deg); }
-        }
-
-        .floating-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .floating-element {
-            position: absolute;
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* About Section */
-
-/* Ubah CSS About Section menjadi seperti ini */
-
-/* Tambahkan CSS ini di bagian About Section atau di tempat yang sesuai */
-
-/* About Text Animation */
-.about-text h2 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #8b5cf6;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease forwards;
-}
-
-.about-text p {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    opacity: 0.9;
-    margin-bottom: 1rem;
-}
-
-.about-text p:nth-of-type(1) {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease 0.3s forwards;
-}
-
-.about-text p:nth-of-type(2) {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease 0.6s forwards;
-}
-
-/* Highlight effect for keywords */
-.highlight {
-    background: linear-gradient(120deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-    position: relative;
-    display: inline-block;
-}
-
-.highlight::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #8b5cf6, #3b82f6);
-    animation: highlightExpand 1s ease 1s forwards;
-}
-
-/* Typing effect for about text */
-.typing-text {
-    overflow: hidden;
-    border-right: 2px solid #8b5cf6;
-    white-space: nowrap;
-    animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-    display: inline-block;
-    max-width: fit-content;
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
+      /* Section Styling */
+      .section {
+        min-height: 100vh;
+        padding: 100px 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
         opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
+        transform: translateY(50px);
+        transition: all 1s ease;
+      }
+
+      .section.active {
         opacity: 1;
         transform: translateY(0);
-    }
-}
+      }
 
-@keyframes highlightExpand {
-    from {
-        width: 0;
-    }
-    to {
+      .container {
+        max-width: 1200px;
         width: 100%;
-    }
-}
+        margin: 0 auto;
+      }
 
-@keyframes typing {
-    from {
-        width: 0;
-    }
-    to {
+      /* Hero Section */
+      .hero {
+        text-align: center;
+        position: relative;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes textGlow {
+        from {
+          text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+        to {
+          text-shadow: 0 0 30px rgba(139, 92, 246, 0.8),
+            0 0 40px rgba(59, 130, 246, 0.5);
+        }
+      }
+
+      .hero p {
+        font-size: 1.5rem;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+      }
+
+      .hero-emoji {
+        position: absolute;
+        font-size: 8rem;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        animation: waveHand 2s ease-in-out infinite;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .hero-emoji:hover {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+
+      @keyframes waveHand {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) rotate(-10deg);
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(10deg);
+        }
+      }
+
+      .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-    }
-}
+        height: 100%;
+        pointer-events: none;
+      }
 
-@keyframes blink-caret {
-    from, to {
-        border-color: transparent;
-    }
-    50% {
-        border-color: #8b5cf6;
-    }
-}
+      .floating-element {
+        position: absolute;
+        background: rgba(139, 92, 246, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
 
-/* Add some decorative elements */
-.about-text::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -20px;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(to bottom, #8b5cf6, transparent);
-    border-radius: 2px;
-    opacity: 0;
-    animation: slideInLeft 0.8s ease 0.2s forwards;
-}
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
 
-@keyframes slideInLeft {
-    from {
+      /* About Section */
+
+      /* Ubah CSS About Section menjadi seperti ini */
+
+      /* Tambahkan CSS ini di bagian About Section atau di tempat yang sesuai */
+
+      /* About Text Animation */
+      .about-text h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #8b5cf6;
         opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s ease forwards;
+      }
+
+      .about-text p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+      }
+
+      .about-text p:nth-of-type(1) {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s ease 0.3s forwards;
+      }
+
+      .about-text p:nth-of-type(2) {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s ease 0.6s forwards;
+      }
+
+      /* Highlight effect for keywords */
+      .highlight {
+        background: linear-gradient(
+          120deg,
+          rgba(139, 92, 246, 0.3) 0%,
+          rgba(139, 92, 246, 0.1) 100%
+        );
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        position: relative;
+        display: inline-block;
+      }
+
+      .highlight::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+        animation: highlightExpand 1s ease 1s forwards;
+      }
+
+      /* Typing effect for about text */
+      .typing-text {
+        overflow: hidden;
+        border-right: 2px solid #8b5cf6;
+        white-space: nowrap;
+        animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        display: inline-block;
+        max-width: fit-content;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes highlightExpand {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: #8b5cf6;
+        }
+      }
+
+      /* Add some decorative elements */
+      .about-text::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -20px;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #8b5cf6, transparent);
+        border-radius: 2px;
+        opacity: 0;
+        animation: slideInLeft 0.8s ease 0.2s forwards;
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .about-text h2 {
+          font-size: 2.2rem;
+        }
+
+        .about-text p {
+          font-size: 1rem;
+        }
+
+        .typing-text {
+          font-size: 0.9rem;
+        }
+      }
+
+      .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+      }
+
+      .about-text {
+        order: 1; /* Pastikan teks di kiri */
+      }
+
+      .about-image {
+        order: 2; /* Pastikan gambar di kanan */
+        position: relative;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .profile-img {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid rgba(139, 92, 246, 0.3);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+      }
+
+      .profile-img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 30px 60px rgba(139, 92, 246, 0.5);
+      }
+
+      /* Skill Icons Orbit Popup */
+      .skill-orbit-popup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 500px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .about-image:hover .skill-orbit-popup {
         opacity: 1;
-        transform: translateX(0);
-    }
-}
+        visibility: visible;
+      }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .about-text h2 {
-        font-size: 2.2rem;
-    }
-    
-    .about-text p {
-        font-size: 1rem;
-    }
-    
-    .typing-text {
-        font-size: 0.9rem;
-    }
-}
+      /* Orbit Container */
+      .orbit-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-50%, -50%);
+        animation: rotateOrbit 20s linear infinite;
+      }
 
-.about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: center;
-}
+      /* Pause animation on hover */
+      .about-image:hover .orbit-container {
+        animation-play-state: paused;
+      }
 
-.about-text {
-    order: 1; /* Pastikan teks di kiri */
-}
+      @keyframes rotateOrbit {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
 
-.about-image {
-    order: 2; /* Pastikan gambar di kanan */
-    position: relative;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+      /* Ubah CSS Skill Icons Orbit menjadi seperti ini */
 
-.profile-img {
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid rgba(139, 92, 246, 0.3);
-    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    z-index: 2;
-}
+      /* Skill Icons Orbit Popup */
+      .skill-orbit-popup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 500px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s ease;
+        z-index: 1;
+        pointer-events: none;
+      }
 
-.profile-img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 30px 60px rgba(139, 92, 246, 0.5);
-}
+      .about-image:hover .skill-orbit-popup {
+        opacity: 1;
+        visibility: visible;
+      }
 
-/* Skill Icons Orbit Popup */
-.skill-orbit-popup {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;
-    height: 500px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 1;
-    pointer-events: none;
-}
+      /* Orbit Container */
+      .orbit-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-50%, -50%);
+      }
 
-.about-image:hover .skill-orbit-popup {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Orbit Container */
-.orbit-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    transform: translate(-50%, -50%);
-    animation: rotateOrbit 20s linear infinite;
-}
-
-/* Pause animation on hover */
-.about-image:hover .orbit-container {
-    animation-play-state: paused;
-}
-
-@keyframes rotateOrbit {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-/* Ubah CSS Skill Icons Orbit menjadi seperti ini */
-
-/* Skill Icons Orbit Popup */
-.skill-orbit-popup {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;
-    height: 500px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s ease;
-    z-index: 1;
-    pointer-events: none;
-}
-
-.about-image:hover .skill-orbit-popup {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Orbit Container */
-.orbit-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    transform: translate(-50%, -50%);
-}
-
-/* Individual Skill Icon in Orbit */
-.orbit-skill {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    background: rgba(15, 15, 30, 0.8);
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    opacity: 0;
-    transform: scale(0);
-}
-
-/* Fade in animation for each skill icon */
-.about-image:hover .orbit-skill:nth-child(1) {
-    animation: fadeInScale 0.5s ease forwards;
-    animation-delay: 0.1s;
-}
-
-.about-image:hover .orbit-skill:nth-child(2) {
-    animation: fadeInScale 0.5s ease forwards;
-    animation-delay: 0.2s;
-}
-
-.about-image:hover .orbit-skill:nth-child(3) {
-    animation: fadeInScale 0.5s ease forwards;
-    animation-delay: 0.3s;
-}
-
-.about-image:hover .orbit-skill:nth-child(4) {
-    animation: fadeInScale 0.5s ease forwards;
-    animation-delay: 0.4s;
-}
-
-.about-image:hover .orbit-skill:nth-child(5) {
-    animation: fadeInScale 0.5s ease forwards;
-    animation-delay: 0.5s;
-}
-
-.about-image:hover .orbit-skill:nth-child(6) {
-    animation: fadeInScale 0.5s ease forwards;
-    animation-delay: 0.6s;
-}
-
-@keyframes fadeInScale {
-    0% {
+      /* Individual Skill Icon in Orbit */
+      .orbit-skill {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        background: rgba(15, 15, 30, 0.8);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
         opacity: 0;
         transform: scale(0);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
+      }
 
-.orbit-skill:hover {
-    transform: scale(1.2);
-    background: rgba(139, 92, 246, 0.2);
-    border-color: rgba(139, 92, 246, 0.6);
-    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
-}
+      /* Fade in animation for each skill icon */
+      .about-image:hover .orbit-skill:nth-child(1) {
+        animation: fadeInScale 0.5s ease forwards;
+        animation-delay: 0.1s;
+      }
 
-.orbit-skill img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-}
+      .about-image:hover .orbit-skill:nth-child(2) {
+        animation: fadeInScale 0.5s ease forwards;
+        animation-delay: 0.2s;
+      }
 
-/* Position each skill icon in a perfect circle */
-.orbit-skill:nth-child(1) {
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(0);
-}
+      .about-image:hover .orbit-skill:nth-child(3) {
+        animation: fadeInScale 0.5s ease forwards;
+        animation-delay: 0.3s;
+      }
 
-.orbit-skill:nth-child(2) {
-    top: 25%;
-    right: 0;
-    transform: translateY(-50%);
-}
+      .about-image:hover .orbit-skill:nth-child(4) {
+        animation: fadeInScale 0.5s ease forwards;
+        animation-delay: 0.4s;
+      }
 
-.orbit-skill:nth-child(3) {
-    bottom: 25%;
-    right: 0;
-    transform: translateY(50%);
-}
+      .about-image:hover .orbit-skill:nth-child(5) {
+        animation: fadeInScale 0.5s ease forwards;
+        animation-delay: 0.5s;
+      }
 
-.orbit-skill:nth-child(4) {
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(0);
-}
+      .about-image:hover .orbit-skill:nth-child(6) {
+        animation: fadeInScale 0.5s ease forwards;
+        animation-delay: 0.6s;
+      }
 
-.orbit-skill:nth-child(5) {
-    bottom: 25%;
-    left: 0;
-    transform: translateY(50%);
-}
+      @keyframes fadeInScale {
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
 
-.orbit-skill:nth-child(6) {
-    top: 25%;
-    left: 0;
-    transform: translateY(-50%);
-}
+      .orbit-skill:hover {
+        transform: scale(1.2);
+        background: rgba(139, 92, 246, 0.2);
+        border-color: rgba(139, 92, 246, 0.6);
+        box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+      }
 
-/* Add labels below each skill icon */
-.skill-label {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: #ffffff;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 0.7rem;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.orbit-skill:hover .skill-label {
-    opacity: 1;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .skill-orbit-popup {
-        width: 350px;
-        height: 350px;
-    }
-    
-    .orbit-skill {
+      .orbit-skill img {
         width: 50px;
         height: 50px;
-    }
-    
-    .orbit-skill img {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .skill-label {
-        font-size: 0.6rem;
-        bottom: -20px;
-    }
-}
+        object-fit: contain;
+      }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .about-content {
-        grid-template-columns: 1fr;
-        text-align: center;
+      /* Position each skill icon in a perfect circle */
+      .orbit-skill:nth-child(1) {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .orbit-skill:nth-child(2) {
+        top: 25%;
+        right: 0;
+        transform: translateY(-50%);
+      }
+
+      .orbit-skill:nth-child(3) {
+        bottom: 25%;
+        right: 0;
+        transform: translateY(50%);
+      }
+
+      .orbit-skill:nth-child(4) {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .orbit-skill:nth-child(5) {
+        bottom: 25%;
+        left: 0;
+        transform: translateY(50%);
+      }
+
+      .orbit-skill:nth-child(6) {
+        top: 25%;
+        left: 0;
+        transform: translateY(-50%);
+      }
+
+      /* Add labels below each skill icon */
+      .skill-label {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #ffffff;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .orbit-skill:hover .skill-label {
+        opacity: 1;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .skill-orbit-popup {
+          width: 350px;
+          height: 350px;
+        }
+
+        .orbit-skill {
+          width: 50px;
+          height: 50px;
+        }
+
+        .orbit-skill img {
+          width: 35px;
+          height: 35px;
+        }
+
+        .skill-label {
+          font-size: 0.6rem;
+          bottom: -20px;
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .about-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 30px;
+        }
+
+        .about-text,
+        .about-image {
+          order: initial; /* Reset order di mobile */
+        }
+
+        .skill-orbit-popup {
+          width: 400px;
+          height: 400px;
+        }
+
+        .orbit-skill {
+          width: 60px;
+          height: 60px;
+        }
+
+        .orbit-skill img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      /* Skills Section */
+
+      /* Tambahkan CSS ini di bagian Skills Section */
+
+      /* Tambahkan CSS ini di bagian Skills Section */
+
+      /* Tambahkan CSS ini di bagian Skills Section */
+
+      /* Skills Carousel Container */
+      .skills-carousel-container {
+        position: relative;
+        overflow: hidden;
+        padding: 20px 0;
+        margin: 0 auto;
+        max-width: 1200px;
+      }
+
+      .skills-carousel {
+        display: flex;
         gap: 30px;
-    }
-    
-    .about-text,
-    .about-image {
-        order: initial; /* Reset order di mobile */
-    }
-    
-    .skill-orbit-popup {
-        width: 400px;
-        height: 400px;
-    }
-    
-    .orbit-skill {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .orbit-skill img {
-        width: 40px;
-        height: 40px;
-    }
-}
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+        cursor: grab;
+      }
 
-        /* Skills Section */
+      .skills-carousel::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+      }
 
-        /* Tambahkan CSS ini di bagian Skills Section */
+      .skills-carousel.dragging {
+        cursor: grabbing;
+      }
 
-        /* Tambahkan CSS ini di bagian Skills Section */
+      /* Skill Card Styles */
+      .skill-card {
+        background: rgba(15, 15, 30, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 280px;
+        flex-shrink: 0;
+      }
 
-/* Tambahkan CSS ini di bagian Skills Section */
+      .skill-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+      }
 
-/* Skills Carousel Container */
-.skills-carousel-container {
-    position: relative;
-    overflow: hidden;
-    padding: 20px 0;
-    margin: 0 auto;
-    max-width: 1200px;
-}
+      .skill-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px;
+      }
 
-.skills-carousel {
-    display: flex;
-    gap: 30px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-    cursor: grab;
-}
+      .skill-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
 
-.skills-carousel::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
-}
+      .skill-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #8b5cf6;
+      }
 
-.skills-carousel.dragging {
-    cursor: grabbing;
-}
+      /* Navigation Arrows */
+      .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        pointer-events: none;
+      }
 
-/* Skill Card Styles */
-.skill-card {
-    background: rgba(15, 15, 30, 0.5);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    min-width: 280px;
-    flex-shrink: 0;
-}
+      .carousel-arrow {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        pointer-events: all;
+        backdrop-filter: blur(10px);
+      }
 
-.skill-card:hover {
-    transform: translateY(-10px);
-    border-color: rgba(139, 92, 246, 0.5);
-    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
-}
+      .carousel-arrow:hover {
+        background: rgba(139, 92, 246, 0.4);
+        transform: scale(1.1);
+      }
 
-.skill-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 10px;
-}
+      .carousel-arrow svg {
+        color: #ffffff;
+        width: 24px;
+        height: 24px;
+      }
 
-.skill-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.skill-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #8b5cf6;
-}
-
-/* Navigation Arrows */
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    pointer-events: none;
-}
-
-.carousel-arrow {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    pointer-events: all;
-    backdrop-filter: blur(10px);
-}
-
-.carousel-arrow:hover {
-    background: rgba(139, 92, 246, 0.4);
-    transform: scale(1.1);
-}
-
-.carousel-arrow svg {
-    color: #ffffff;
-    width: 24px;
-    height: 24px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .skill-card {
-        min-width: 250px;
-        padding: 20px;
-    }
-    
-    .skill-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .skill-card h3 {
-        font-size: 1.2rem;
-    }
-    
-    .carousel-arrow {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .carousel-arrow svg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-/* Skills Carousel Container */
-.skills-carousel-container {
-    position: relative;
-    overflow: hidden;
-    padding: 20px 0;
-    margin: 0 auto;
-    max-width: 1200px;
-}
-
-.skills-carousel {
-    display: flex;
-    gap: 30px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-    cursor: grab;
-}
-
-.skills-carousel::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
-}
-
-.skills-carousel.dragging {
-    cursor: grabbing;
-}
-
-/* Skill Card Styles */
-.skill-card {
-    background: rgba(15, 15, 30, 0.5);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    min-width: 280px;
-    flex-shrink: 0;
-}
-
-.skill-card:hover {
-    transform: translateY(-10px);
-    border-color: rgba(139, 92, 246, 0.5);
-    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
-}
-
-.skill-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 10px;
-}
-
-.skill-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.skill-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #8b5cf6;
-}
-
-/* Navigation Arrows */
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    pointer-events: none;
-}
-
-.carousel-arrow {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    pointer-events: all;
-    backdrop-filter: blur(10px);
-}
-
-.carousel-arrow:hover {
-    background: rgba(139, 92, 246, 0.4);
-    transform: scale(1.1);
-}
-
-.carousel-arrow svg {
-    color: #ffffff;
-    width: 24px;
-    height: 24px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .skill-card {
-        min-width: 250px;
-        padding: 20px;
-    }
-    
-    .skill-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .skill-card h3 {
-        font-size: 1.2rem;
-    }
-    
-    .carousel-arrow {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .carousel-arrow svg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-/* Skills Carousel Container */
-.skills-carousel-container {
-    position: relative;
-    overflow: hidden;
-    padding: 20px 0;
-    margin: 0 auto;
-    max-width: 1200px;
-}
-
-.skills-carousel {
-    display: flex;
-    gap: 30px;
-    will-change: transform;
-    cursor: grab;
-}
-
-.skills-carousel.dragging {
-    cursor: grabbing;
-}
-
-/* Skill Card Styles */
-.skill-card {
-    background: rgba(15, 15, 30, 0.5);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    min-width: 280px;
-    flex-shrink: 0;
-}
-
-.skill-card:hover {
-    transform: translateY(-10px);
-    border-color: rgba(139, 92, 246, 0.5);
-    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
-}
-
-.skill-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 10px;
-}
-
-.skill-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.skill-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #8b5cf6;
-}
-
-/* Navigation Dots */
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 30px;
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(139, 92, 246, 0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.dot.active {
-    background: #8b5cf6;
-    transform: scale(1.3);
-}
-
-/* Navigation Arrows */
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    pointer-events: none;
-}
-
-.carousel-arrow {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    pointer-events: all;
-    backdrop-filter: blur(10px);
-}
-
-.carousel-arrow:hover {
-    background: rgba(139, 92, 246, 0.4);
-    transform: scale(1.1);
-}
-
-.carousel-arrow svg {
-    color: #ffffff;
-    width: 24px;
-    height: 24px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .skill-card {
-        min-width: 250px;
-        padding: 20px;
-    }
-    
-    .skill-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .skill-card h3 {
-        font-size: 1.2rem;
-    }
-    
-    .carousel-arrow {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .carousel-arrow svg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
         .skill-card {
-            background: rgba(15, 15, 30, 0.5);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+          min-width: 250px;
+          padding: 20px;
         }
 
         .skill-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 10px;
-        }
-
-        .skill-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+          width: 60px;
+          height: 60px;
         }
 
         .skill-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #8b5cf6;
+          font-size: 1.2rem;
         }
 
-        /* Modal for skill description */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            animation: fadeIn 0.3s ease;
+        .carousel-arrow {
+          width: 40px;
+          height: 40px;
         }
 
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            margin: 15% auto;
-            padding: 30px;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 20px;
-            width: 80%;
-            max-width: 600px;
-            position: relative;
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+        .carousel-arrow svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      /* Skills Carousel Container */
+      .skills-carousel-container {
+        position: relative;
+        overflow: hidden;
+        padding: 20px 0;
+        margin: 0 auto;
+        max-width: 1200px;
+      }
+
+      .skills-carousel {
+        display: flex;
+        gap: 30px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+        cursor: grab;
+      }
+
+      .skills-carousel::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+      }
+
+      .skills-carousel.dragging {
+        cursor: grabbing;
+      }
+
+      /* Skill Card Styles */
+      .skill-card {
+        background: rgba(15, 15, 30, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 280px;
+        flex-shrink: 0;
+      }
+
+      .skill-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+      }
+
+      .skill-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px;
+      }
+
+      .skill-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .skill-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #8b5cf6;
+      }
+
+      /* Navigation Arrows */
+      .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        pointer-events: none;
+      }
+
+      .carousel-arrow {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        pointer-events: all;
+        backdrop-filter: blur(10px);
+      }
+
+      .carousel-arrow:hover {
+        background: rgba(139, 92, 246, 0.4);
+        transform: scale(1.1);
+      }
+
+      .carousel-arrow svg {
+        color: #ffffff;
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .skill-card {
+          min-width: 250px;
+          padding: 20px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .skill-icon {
+          width: 60px;
+          height: 60px;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .skill-card h3 {
+          font-size: 1.2rem;
         }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
+        .carousel-arrow {
+          width: 40px;
+          height: 40px;
         }
 
-        .close:hover {
-            color: #8b5cf6;
+        .carousel-arrow svg {
+          width: 20px;
+          height: 20px;
         }
+      }
 
-        .modal-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+      /* Skills Carousel Container */
+      .skills-carousel-container {
+        position: relative;
+        overflow: hidden;
+        padding: 20px 0;
+        margin: 0 auto;
+        max-width: 1200px;
+      }
 
-        .modal-icon {
-            width: 60px;
-            height: 60px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 10px;
-        }
+      .skills-carousel {
+        display: flex;
+        gap: 30px;
+        will-change: transform;
+        cursor: grab;
+      }
 
-        .modal-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+      .skills-carousel.dragging {
+        cursor: grabbing;
+      }
 
-        .modal-title {
-            font-size: 2rem;
-            color: #8b5cf6;
-        }
+      /* Skill Card Styles */
+      .skill-card {
+        background: rgba(15, 15, 30, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 280px;
+        flex-shrink: 0;
+      }
 
-        .modal-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            opacity: 0.9;
-        }
+      .skill-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+      }
 
-        /* Projects Section */
+      .skill-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px;
+      }
 
-        /* Tambahkan CSS ini di bagian Project Section */
+      .skill-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
 
-.project-content {
-    position: relative;
-    padding: 25px 25px 80px; /* Tambahkan padding bawah untuk ruang tombol */
-}
+      .skill-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #8b5cf6;
+      }
 
-.project-buttons {
-    position: absolute;
-    bottom: 25px;
-    left: 25px;
-    right: 25px;
-    display: flex;
-    gap: 15px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.project-card:hover .project-buttons {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-/* Animasi untuk tombol individual */
-.project-button {
-    transform: translateY(10px);
-    opacity: 0;
-    transition: all 0.3s ease;
-    transition-delay: 0.1s;
-}
-
-.project-card:hover .project-button:first-child {
-    transform: translateY(0);
-    opacity: 1;
-    transition-delay: 0.1s;
-}
-
-.project-card:hover .project-button:last-child {
-    transform: translateY(0);
-    opacity: 1;
-    transition-delay: 0.2s;
-}
-
-/* Efek hover tambahan untuk project card */
-.project-card {
-    transition: all 0.4s ease;
-    transform-origin: center bottom;
-}
-
-.project-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .project-content {
-        padding: 25px 25px 100px; /* Lebih banyak ruang di mobile */
-    }
-    
-    .project-buttons {
-        flex-direction: column;
+      /* Navigation Dots */
+      .carousel-dots {
+        display: flex;
+        justify-content: center;
         gap: 10px;
-    }
-    
-    /* Di mobile, tombol selalu terlihat */
-    .project-buttons {
+        margin-top: 30px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .dot.active {
+        background: #8b5cf6;
+        transform: scale(1.3);
+      }
+
+      /* Navigation Arrows */
+      .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        pointer-events: none;
+      }
+
+      .carousel-arrow {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        pointer-events: all;
+        backdrop-filter: blur(10px);
+      }
+
+      .carousel-arrow:hover {
+        background: rgba(139, 92, 246, 0.4);
+        transform: scale(1.1);
+      }
+
+      .carousel-arrow svg {
+        color: #ffffff;
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .skill-card {
+          min-width: 250px;
+          padding: 20px;
+        }
+
+        .skill-icon {
+          width: 60px;
+          height: 60px;
+        }
+
+        .skill-card h3 {
+          font-size: 1.2rem;
+        }
+
+        .carousel-arrow {
+          width: 40px;
+          height: 40px;
+        }
+
+        .carousel-arrow svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+      }
+
+      .skill-card {
+        background: rgba(15, 15, 30, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .skill-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+      }
+
+      .skill-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px;
+      }
+
+      .skill-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .skill-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #8b5cf6;
+      }
+
+      /* Modal for skill description */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal-content {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        margin: 15% auto;
+        padding: 30px;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 20px;
+        width: 80%;
+        max-width: 600px;
+        position: relative;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .close:hover {
+        color: #8b5cf6;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-icon {
+        width: 60px;
+        height: 60px;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px;
+      }
+
+      .modal-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .modal-title {
+        font-size: 2rem;
+        color: #8b5cf6;
+      }
+
+      .modal-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+
+      /* Projects Section */
+
+      /* Tambahkan CSS ini di bagian Project Section */
+
+      .project-content {
+        position: relative;
+        padding: 25px 25px 80px; /* Tambahkan padding bawah untuk ruang tombol */
+      }
+
+      .project-buttons {
+        position: absolute;
+        bottom: 25px;
+        left: 25px;
+        right: 25px;
+        display: flex;
+        gap: 15px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .project-card:hover .project-buttons {
         opacity: 1;
         visibility: visible;
-        transform: none;
-        position: static;
-        margin-top: 20px;
-    }
-    
-    .project-button {
-        transform: none;
+        transform: translateY(0);
+      }
+
+      /* Animasi untuk tombol individual */
+      .project-button {
+        transform: translateY(10px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        transition-delay: 0.1s;
+      }
+
+      .project-card:hover .project-button:first-child {
+        transform: translateY(0);
         opacity: 1;
-    }
-}
+        transition-delay: 0.1s;
+      }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
+      .project-card:hover .project-button:last-child {
+        transform: translateY(0);
+        opacity: 1;
+        transition-delay: 0.2s;
+      }
 
-        .project-card {
-            background: rgba(15, 15, 30, 0.5);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
+      /* Efek hover tambahan untuk project card */
+      .project-card {
+        transition: all 0.4s ease;
+        transform-origin: center bottom;
+      }
 
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.3);
-        }
+      .project-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4);
+      }
 
-        .project-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
         .project-content {
-            padding: 25px;
-        }
-
-        .project-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #8b5cf6;
+          padding: 25px 25px 100px; /* Lebih banyak ruang di mobile */
         }
 
         .project-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        /* Di mobile, tombol selalu terlihat */
+        .project-buttons {
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          position: static;
+          margin-top: 20px;
         }
 
         .project-button {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
+          transform: none;
+          opacity: 1;
+        }
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+      }
+
+      .project-card {
+        background: rgba(15, 15, 30, 0.5);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .project-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(139, 92, 246, 0.3);
+      }
+
+      .project-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .project-content {
+        padding: 25px;
+      }
+
+      .project-content h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #8b5cf6;
+      }
+
+      .project-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .project-button {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .code-button {
+        background: linear-gradient(135deg, #333333, #555555);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .code-button:hover {
+        background: linear-gradient(135deg, #444444, #666666);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .demo-button {
+        background: linear-gradient(135deg, #8b5cf6, #7209b7);
+        color: #ffffff;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+      }
+
+      .demo-button:hover {
+        background: linear-gradient(135deg, #9d6ff7, #8209c7);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+      }
+
+      .project-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .project-button:hover::before {
+        left: 100%;
+      }
+
+      /* Social Icons */
+      .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 2rem 0;
+      }
+
+      .social-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: rgba(15, 15, 30, 0.8);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .social-icon::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(139, 92, 246, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .social-icon:hover::before {
+        left: 100%;
+      }
+
+      .social-icon:hover {
+        transform: translateY(-5px) scale(1.1);
+        border-color: rgba(139, 92, 246, 0.8);
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        background: rgba(139, 92, 246, 0.1);
+      }
+
+      .social-icon:active {
+        transform: translateY(-2px) scale(1.05);
+      }
+
+      .social-icon svg {
+        width: 24px;
+        height: 24px;
+        color: #ffffff;
+        transition: color 0.3s ease;
+        position: relative;
+        z-index: 2;
+      }
+
+      .social-icon:hover svg {
+        color: #8b5cf6;
+      }
+
+      /* Specific hover colors for each platform */
+      .social-icon:nth-child(1):hover {
+        background: rgba(51, 51, 51, 0.2);
+      }
+
+      .social-icon:nth-child(1):hover svg {
+        color: #ffffff;
+      }
+
+      .social-icon:nth-child(2):hover {
+        background: linear-gradient(
+          135deg,
+          rgba(225, 48, 108, 0.2),
+          rgba(253, 29, 29, 0.2)
+        );
+      }
+
+      .social-icon:nth-child(2):hover svg {
+        color: #e1306c;
+      }
+
+      .social-icon:nth-child(3):hover {
+        background: rgba(37, 211, 102, 0.2);
+      }
+
+      .social-icon:nth-child(3):hover svg {
+        color: #25d366;
+      }
+
+      .social-icon:nth-child(4):hover {
+        background: rgba(0, 136, 204, 0.2);
+      }
+
+      .social-icon:nth-child(4):hover svg {
+        color: #0088cc;
+      }
+
+      .social-icon:nth-child(5):hover {
+        background: rgba(234, 67, 53, 0.2);
+      }
+
+      .social-icon:nth-child(5):hover svg {
+        color: #ea4335;
+      }
+
+      .contact-text {
+        text-align: center;
+        font-size: 1.1rem;
+        opacity: 0.8;
+        color: #8b5cf6;
+        margin-top: 1rem;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 3rem;
+        color: #8b5cf6;
+      }
+
+      /* Scroll indicator */
+      .scroll-indicator {
+        position: fixed;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+      }
+
+      .scroll-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.3);
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .scroll-dot.active {
+        background: #8b5cf6;
+        transform: scale(1.3);
+      }
+
+      /* Footer with Copyright */
+      .footer {
+        background: rgba(15, 15, 30, 0.7);
+        backdrop-filter: blur(10px);
+        padding: 20px 0;
+        text-align: center;
+        border-top: 1px solid rgba(139, 92, 246, 0.2);
+        margin-top: 50px;
+      }
+
+      .copyright {
+        font-size: 0.9rem;
+        opacity: 0.7;
+        color: #ffffff;
+      }
+
+      .copyright span {
+        color: #8b5cf6;
+        font-weight: 500;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
         }
 
-        .code-button {
-            background: linear-gradient(135deg, #333333, #555555);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .about-content {
+          grid-template-columns: 1fr;
+          text-align: center;
         }
 
-        .code-button:hover {
-            background: linear-gradient(135deg, #444444, #666666);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        .nav-links {
+          gap: 15px;
         }
 
-        .demo-button {
-            background: linear-gradient(135deg, #8b5cf6, #7209b7);
-            color: #ffffff;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+        .section {
+          padding: 50px 20px;
         }
 
-        .demo-button:hover {
-            background: linear-gradient(135deg, #9d6ff7, #8209c7);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
-        }
-
-        .project-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .project-button:hover::before {
-            left: 100%;
-        }
-
-        /* Social Icons */
         .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 2rem 0;
+          gap: 15px;
         }
 
         .social-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: rgba(15, 15, 30, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-icon::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .social-icon:hover::before {
-            left: 100%;
-        }
-
-        .social-icon:hover {
-            transform: translateY(-5px) scale(1.1);
-            border-color: rgba(139, 92, 246, 0.8);
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        .social-icon:active {
-            transform: translateY(-2px) scale(1.05);
+          width: 45px;
+          height: 45px;
         }
 
         .social-icon svg {
-            width: 24px;
-            height: 24px;
-            color: #ffffff;
-            transition: color 0.3s ease;
-            position: relative;
-            z-index: 2;
+          width: 20px;
+          height: 20px;
         }
 
-        .social-icon:hover svg {
-            color: #8b5cf6;
+        .modal-content {
+          width: 90%;
+          margin: 20% auto;
+          padding: 20px;
         }
 
-        /* Specific hover colors for each platform */
-        .social-icon:nth-child(1):hover {
-            background: rgba(51, 51, 51, 0.2);
-        }
-        
-        .social-icon:nth-child(1):hover svg {
-            color: #ffffff;
+        .skill-icon {
+          width: 60px;
+          height: 60px;
         }
 
-        .social-icon:nth-child(2):hover {
-            background: linear-gradient(135deg, rgba(225, 48, 108, 0.2), rgba(253, 29, 29, 0.2));
-        }
-        
-        .social-icon:nth-child(2):hover svg {
-            color: #E1306C;
+        .project-buttons {
+          flex-direction: column;
+          gap: 10px;
         }
 
-        .social-icon:nth-child(3):hover {
-            background: rgba(37, 211, 102, 0.2);
+        .projects-grid {
+          grid-template-columns: 1fr;
         }
-        
-        .social-icon:nth-child(3):hover svg {
-            color: #25D366;
-        }
+      }
 
-        .social-icon:nth-child(4):hover {
-            background: rgba(0, 136, 204, 0.2);
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
         }
-        
-        .social-icon:nth-child(4):hover svg {
-            color: #0088CC;
-        }
-
-        .social-icon:nth-child(5):hover {
-            background: rgba(234, 67, 53, 0.2);
-        }
-        
-        .social-icon:nth-child(5):hover svg {
-            color: #EA4335;
-        }
-
-        .contact-text {
-            text-align: center;
-            font-size: 1.1rem;
-            opacity: 0.8;
-            color: #8b5cf6;
-            margin-top: 1rem;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 3rem;
-            margin-bottom: 3rem;
-            color: #8b5cf6;
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1000;
-        }
-
-        .scroll-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.3);
-            margin: 10px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .scroll-dot.active {
-            background: #8b5cf6;
-            transform: scale(1.3);
-        }
-
-        /* Footer with Copyright */
-        .footer {
-            background: rgba(15, 15, 30, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 20px 0;
-            text-align: center;
-            border-top: 1px solid rgba(139, 92, 246, 0.2);
-            margin-top: 50px;
-        }
-
-        .copyright {
-            font-size: 0.9rem;
-            opacity: 0.7;
-            color: #ffffff;
-        }
-
-        .copyright span {
-            color: #8b5cf6;
-            font-weight: 500;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .about-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .nav-links {
-                gap: 15px;
-            }
-            
-            .section {
-                padding: 50px 20px;
-            }
-            
-            .social-icons {
-                gap: 15px;
-            }
-            
-            .social-icon {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .social-icon svg {
-                width: 20px;
-                height: 20px;
-            }
-
-            .modal-content {
-                width: 90%;
-                margin: 20% auto;
-                padding: 20px;
-            }
-
-            .skill-icon {
-                width: 60px;
-                height: 60px;
-            }
-
-            .project-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <!-- Background Bintang -->
+    <canvas id="starfield"></canvas>
+
     <!-- Dynamic Island Navbar -->
     <nav class="navbar">
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </nav>
 
     <!-- Scroll Indicator -->
     <div class="scroll-indicator">
-        <div class="scroll-dot active" data-section="0"></div>
-        <div class="scroll-dot" data-section="1"></div>
-        <div class="scroll-dot" data-section="2"></div>
-        <div class="scroll-dot" data-section="3"></div>
-        <div class="scroll-dot" data-section="4"></div>
+      <div class="scroll-dot active" data-section="0"></div>
+      <div class="scroll-dot" data-section="1"></div>
+      <div class="scroll-dot" data-section="2"></div>
+      <div class="scroll-dot" data-section="3"></div>
+      <div class="scroll-dot" data-section="4"></div>
     </div>
 
     <!-- Theme Toggle Buttons -->
-<div class="theme-toggle">
-    <button class="theme-btn dark" title="Dark Theme" onclick="setTheme('dark')"></button>
-    <button class="theme-btn default active" title="Default Theme" onclick="setTheme('default')"></button>
-    <button class="theme-btn gray" title="Gray Theme" onclick="setTheme('gray')"></button>
-</div>
+    <div class="theme-toggle">
+      <button
+        class="theme-btn dark"
+        title="Dark Theme"
+        onclick="setTheme('dark')"
+      ></button>
+      <button
+        class="theme-btn default active"
+        title="Default Theme"
+        onclick="setTheme('default')"
+      ></button>
+      <button
+        class="theme-btn gray"
+        title="Gray Theme"
+        onclick="setTheme('gray')"
+      ></button>
+    </div>
 
     <!-- Section 1: Hero/Introduction -->
     <section class="section active hero" id="home">
-        <div class="floating-elements">
-            <div class="floating-element" style="top: 20%; left: 10%; width: 100px; height: 100px; animation-delay: 0s;"></div>
-            <div class="floating-element" style="top: 60%; right: 15%; width: 150px; height: 150px; animation-delay: 2s;"></div>
-            <div class="floating-element" style="bottom: 20%; left: 20%; width: 80px; height: 80px; animation-delay: 4s;"></div>
+      <div class="floating-elements">
+        <div
+          class="floating-element"
+          style="
+            top: 20%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            animation-delay: 0s;
+          "
+        ></div>
+        <div
+          class="floating-element"
+          style="
+            top: 60%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 2s;
+          "
+        ></div>
+        <div
+          class="floating-element"
+          style="
+            bottom: 20%;
+            left: 20%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 4s;
+          "
+        ></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-emoji" onclick="showInfo()">👋</div>
+          <h1>Inayattullah Yoga F</h1>
+          <p>Full Stack Developer & UI/UX Designer</p>
+          <p style="font-size: 1.1rem; opacity: 0.7">
+            Crafting digital experiences with passion
+          </p>
         </div>
-        
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-emoji" onclick="showInfo()">👋</div>
-                <h1>Inayattullah Yoga F</h1>
-                <p>Full Stack Developer & UI/UX Designer</p>
-                <p style="font-size: 1.1rem; opacity: 0.7;">Crafting digital experiences with passion</p>
-            </div>
-        </div>
+      </div>
     </section>
 
-<!-- Ubah bagian About Section menjadi seperti ini -->
-<section class="section about" id="about">
-    <div class="container">
+    <!-- Ubah bagian About Section menjadi seperti ini -->
+    <section class="section about" id="about">
+      <div class="container">
         <div class="about-content">
-            <div class="about-text">
-                <h2>About Me</h2>
-                <p>Saya adalah seorang developer yang passionate dalam menciptakan pengalaman digital yang memukau. Dengan pengalaman 1 tahun di bidang web development, saya telah menangani berbagai proyek mulai dari website sederhana hingga aplikasi web kompleks.</p>
-                <br>
-                <p>Keahlian saya meliputi backend development, dengan spesialisasi dalam JavaScript, React, Node.js, dan berbagai teknologi modern lainnya.</p>
-            </div>
-            <div class="about-image">
-                <img src="hanako.jpg" alt="Profile" class="profile-img">
-                
-                <!-- Skill Icons Orbit Popup -->
-                <div class="skill-orbit-popup">
-                    <div class="orbit-container">
-                        <!-- Photoshop Icon -->
-                        <div class="orbit-skill">
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOMAAADeCAMAAAD4tEcNAAAAkFBMVEUAHSYAyP8AzP8ACQ4NjK8Nh6kAz/8AAAAAGCAAO0wAAAMAn8sAzf8Ayv8AGyMAGiMAExoAKDQAISsAEBYABwsAEhgAjLMAl8EAU2oAptQAQ1YAuOsNrNkNhKUAYn0Ag6gAcI8AWnMAZ4QANEMAepwASl8As+UAwPUALDkAVGsANkUAdJUAmcMAZIAAbIsA1P8vXQtDAAAH7ElEQVR4nO2da3eiOhRASZgmqASxKIgy4Btbnfb//7sL2vpIAhrFALnZX2bWqlV2E5JzkkM0gPoYdV+ABLSjGmhHNdCOanB2JFAtCOtIorc/KvEWEcYR/sWmSuC/kHV8Mw2VMN+0owpoRzXQjmqgHdVAO6qBdlQD7agG2lENtKMaaEc10I5qoB3VQDuqgXZUA+2oBtpRDbSjGmhHNdCO9+FYluu6Iy/jt1xk+EP2X8+1nBdd/J087+jg9876Yx4vZrvVKkkS/8A+OOD7yS5ev2M89KyXOdziaUfH2HyjI/YBqo7LtrOfkE0w+8RD93UeZTztaHW+wU0IgQilwRwP62jNChzRbcejKETAX2L5lhIdj5q9Ce6/ToeLXMf8zVHPkDw1SXfM3h5+yW3KGhwBQT1T5l1ZhyMA9nQgcR6pxxHAdClPsiZHQNKBtO5al2PWkkNZA09tjsDu4ddpXVGfI0AzSfPkCxzJbzB+iM8JAQUQOJCTdFXvSNIwS6ySZJWRBL0NQDYEXKCk3lq9Y3bl3WNynKXMwy7GnV1o29zWRBMpY+srHLvUKzw8SIBdX0NKcMxwhpaPOE2JtjIaUo5jviIyBqykncgYWmU5Goa3ZSVJKqOzynM03E92HpEy6kh0NMyYCRekdFaZjgYO6ZkShhI6q1RHa8nERGBYhUU5Uh05DYk65TfkcQ3edS3r8SxFrqM7pxsSxYW5ct81MXaX43kcx/NxZ+B1cdd0Hwhx5Tr2XXpotVce/6UjbM39KEUXpJteEm/Fl9vlOho4ohxhwLshHRMvQoiopIUQaCM09cdYzFKy49CHd7zatBKACpKVfB06/RCSlOzo7ajYnLCTh4V3gJ+nnH5JLDyS7OjSYQDZ0JdrLje88P3ql4hQ5CDbcUw7TilHHMOiXnrhKDSrNs0R7241Yusd8eyeFbCGO9JBAIkuHT0mRmiho0e301VQbg2KV/Ha42gm9Py4v3g1jm4ONy1wxD3a0T9/1ojNL1vpmNLx6swr/mErHa1PJu8Yn3IrJj446Ni/hTEXxxk12tFM6GVWe3DKC9nkEkAUJvFkue2s45kfZknI0bPRjkxvvJgenT6zSID8d2xm6XGeKHtZMrld9A6xepMdvX+0BtyfrpYZcQhZ4+uM2BlhMw7zlKuxjv0hM6igxeh0JXTahT54l+HiZQ/BxuYdOGA2PZB7vh2p9LlwM8TCE7FVWYmOnFj0Msqh71U0L0yELbGFZ3mOvHAbxaeuanjUVgHaVrUDK8vRxT6rSNLz2NE3qHsVVbbLLMXRcfF4ypng0er8Qc47PeSsq9oKeb2j5WUDPnf5ggDz3FSOS/VV6Fe1TfCSvfLTKYRDjPHnVzZx87fKZ5drq116YoFVbcC+oOZh6vt+Xli+Svwg3MDfAIwBXi9X4SkTA7nVSL6oduVUWl6SSdjXWx1M2gXgdFCwiF67452g2XVAxsbr2Q06r6LStTZHFFBDCrOclUuifQVFy3U52uz6OOYt5kAwE9zdaIwjijAzw3cD3moOQdOPJ58lqMcR9VhFw5rw34mgaP2UZT315AlHkbsQ8HNBz1nW8VwA+OBHMCVvBVHY4f5dGumYDZX9olkPJ8XvBVHgPDjESnYkaEMvYFxJbkoWkSGZPdZhZToSiDbz0st0jLREMvsDbR9pSmmOmSAJJrfmOmsLyrYDIFw8kIxIccxrFdJ9jLu3u5o7KGvJrCkD8aHnZfXkhBz/tRGyp/vdBHfvC1csKyr9o6GNcDbyktwq6IVhFEVh2POT3bxj4q7Ak7oO5pbznoDCKddLcuS8ivxAd5g/ci12RdnoOk55ldlnyZFYd5W8b3UfrucXlufknxCJDTyNdDT6uBOVdNgsFhR5t2Y65ovh82mxpVj5clMd8xXZuNCSrVwqo7mOeeljnBZYlpSEsjTZMbfcEe7gI9SQzXbMrs/dc5sSLe+/I5vumD/8wovuCmt7OTTeMeuwZo+N7kQeKGiBYzZbsrmzSAlrGxyz6G7FPv1y/9ZdOxwNvGcemrg/DGiJI7NzB9D47hmyJY7sAnNJuQBNWxxHC+pjBCKdtji6H7RjG9vRccsOfhjRJVqtHHMs4nvFsQvz8Atatm/ucN6hDb6wx79ypgyNgBbGcnntCkHpl8k9ugz79PM9AolHoxzz9VPgd7DpXt+ZnAIm6N9f+tgwx8N6+tT/sHA3X9Gz8sLVLp5vmFBOYFhtnuNR0572ktl8PZms49WesxhAiMCHNNHx6Gnbv4XkvDKBQAHHG9x6jPmKdjqKHWbSSkciVkrXSke0a/IznsUIOIqe9tVCR7gR3GZtn6O9ET0HoW2OhFuiVU5zHK2yWtfTm8NdE+oBHs0fvcINnPNbo3D5QPFKcxyNEZ5Ni+qywSGKfbBq7mnH/vYbXfHNPYHjLjw88aeIPqYD/BS/ZEnXY3WBz5/Bbr0PrnmmpNYy8eCfH4HDaefn881BuJo8fu53BWfp9ykevJJfnJGJsTGZz1ZJEgRvyWqRn1P/zOHCDf1OhH6WG3v51w5U8X0DDXWsFO2oBtpRDbSjGmhHNdCOaqAd1UA7qoF2VAPtqAbaUQ20oxpoRzXQjmqgHdVAO6qBdlQD7agG2lENtKMaaEc10I5qoB3VQDuqgXZUA+2oBtpRDbiOf8/f3KAC+C/rSKK3Pyrxdv42opPjzymx6nB+tOnsqC7aUQ20oxpoRzX4Pzj+B/mNuqtoMvZsAAAAAElFTkSuQmCC" alt="Photoshop">
-                        </div>
-                        
-                        <!-- CapCut Icon -->
-                        <div class="orbit-skill">
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=" alt="CapCut">
-                        </div>
-                        
-                        <!-- Python Icon -->
-                        <div class="orbit-skill">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png" alt="Python">
-                        </div>
-                        
-                        <!-- HTML Icon -->
-                        <div class="orbit-skill">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png" alt="HTML">
-                        </div>
-                        
-                        <!-- CSS Icon -->
-                        <div class="orbit-skill">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png" alt="CSS">
-                        </div>
-                        
-                        <!-- JavaScript Icon (tambahan) -->
-                        <div class="orbit-skill">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/120px-JavaScript-logo.png" alt="JavaScript">
-                        </div>
-                    </div>
+          <div class="about-text">
+            <h2>About Me</h2>
+            <p>
+              Saya adalah seorang developer yang passionate dalam menciptakan
+              pengalaman digital yang memukau. Dengan pengalaman 1 tahun di
+              bidang web development, saya telah menangani berbagai proyek mulai
+              dari website sederhana hingga aplikasi web kompleks.
+            </p>
+            <br />
+            <p>
+              Keahlian saya meliputi backend development, dengan spesialisasi
+              dalam JavaScript, React, Node.js, dan berbagai teknologi modern
+              lainnya.
+            </p>
+          </div>
+          <div class="about-image">
+            <img src="foto.JPG" alt="Profile" class="profile-img" />
+
+            <!-- Skill Icons Orbit Popup -->
+            <div class="skill-orbit-popup">
+              <div class="orbit-container">
+                <!-- Photoshop Icon -->
+                <div class="orbit-skill">
+                  <img
+                    src="data:image/png;base64,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"
+                    alt="Photoshop"
+                  />
                 </div>
+
+                <!-- CapCut Icon -->
+                <div class="orbit-skill">
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII="
+                    alt="CapCut"
+                  />
+                </div>
+
+                <!-- Python Icon -->
+                <div class="orbit-skill">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png"
+                    alt="Python"
+                  />
+                </div>
+
+                <!-- HTML Icon -->
+                <div class="orbit-skill">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png"
+                    alt="HTML"
+                  />
+                </div>
+
+                <!-- CSS Icon -->
+                <div class="orbit-skill">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png"
+                    alt="CSS"
+                  />
+                </div>
+
+                <!-- JavaScript Icon (tambahan) -->
+                <div class="orbit-skill">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/120px-JavaScript-logo.png"
+                    alt="JavaScript"
+                  />
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-</section>
+      </div>
+    </section>
     <!-- Section 3: Skills -->
     <section class="section" id="skills">
-        <div class="container">
-            <h2 class="section-title">Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-card" onclick="showSkillModal('Photoshop', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Photoshop_CC_icon.png/120px-Photoshop_CC_icon.png', 'Saya memiliki keahlian dalam menggunakan Adobe Photoshop untuk editing foto, desain grafis, dan manipulasi gambar. Dengan pengalaman lebih dari 2 tahun, saya dapat membuat desain yang menarik dan profesional.')">
-                    <div class="skill-icon">
-                        <img src="data:image/png;base64,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" alt="Photoshop">
-                    </div>
-                    <h3>Photoshop</h3>
-                    <p>Foto editing</p>
-                </div>
-                <div class="skill-card" onclick="showSkillModal('CapCut', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')">
-                    <div class="skill-icon">
-                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=" alt="CapCut">
-                    </div>
-                    <h3>CapCut</h3>
-                    <p>Video editing & content creation</p>
-                </div>
-                                <div class="skill-card" onclick="showSkillModal('JavaScript', 'data:image/png;base64,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', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')">
-                    <div class="skill-icon">
-                        <img src="data:image/png;base64,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" alt="JavaScript">
-                    </div>
-                    <h3>JavaScript</h3>
-                    <p>Backend development</p>
-                </div>
-                <div class="skill-card" onclick="showSkillModal('Python', 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png', 'Saya memiliki pemahaman yang kuat dalam pemrograman Python, termasuk penggunaan library seperti Django, Flask, NumPy, dan Pandas. Saya telah mengembangkan berbagai aplikasi web dan tools otomatisasi menggunakan Python.')">
-                    <div class="skill-icon">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png" alt="Python">
-                    </div>
-                    <h3>Python</h3>
-                    <p>Backend development & automation</p>
-                </div>
-                <div class="skill-card" onclick="showSkillModal('HTML', 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png', 'Saya mahir dalam HTML5 untuk membuat struktur website yang semantik dan SEO-friendly. Saya memahami penggunaan tag-tag HTML terbaru, form handling, dan integrasi dengan teknologi web lainnya.')">
-                    <div class="skill-icon">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png" alt="HTML">
-                    </div>
-                    <h3>HTML</h3>
-                    <p>Web structure & markup language</p>
-                </div>
-                <div class="skill-card" onclick="showSkillModal('CSS', 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png', 'Saya memiliki keahlian dalam CSS3 untuk styling website yang responsif dan menarik. Saya mahir dalam Flexbox, Grid, animasi, dan framework CSS seperti Bootstrap dan Tailwind.')">
-                    <div class="skill-icon">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png" alt="CSS">
-                    </div>
-                    <h3>CSS</h3>
-                    <p>Web styling & responsive design</p>
-                </div>
+      <div class="container">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid">
+          <div
+            class="skill-card"
+            onclick="showSkillModal('Photoshop', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Photoshop_CC_icon.png/120px-Photoshop_CC_icon.png', 'Saya memiliki keahlian dalam menggunakan Adobe Photoshop untuk editing foto, desain grafis, dan manipulasi gambar. Dengan pengalaman lebih dari 2 tahun, saya dapat membuat desain yang menarik dan profesional.')"
+          >
+            <div class="skill-icon">
+              <img
+                src="data:image/png;base64,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"
+                alt="Photoshop"
+              />
             </div>
+            <h3>Photoshop</h3>
+            <p>Foto editing</p>
+          </div>
+          <div
+            class="skill-card"
+            onclick="showSkillModal('CapCut', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII=', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')"
+          >
+            <div class="skill-icon">
+              <img
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEX///8AAAD39/c/Pz9zc3MiIiKIiIiqqqr8/Pzo6Oj09PTs7OzT09MZGRmmpqaMjIzDw8NSUlKfn59JSUmUlJRsbGy4uLgPDw/a2tqAgIAuLi5gYGDi4uI0NDRnZ2c5OTmBFX64AAADg0lEQVR4nO2a2ZKqMBBADbKERXZQFPX///I6OHpla9KdgFVTfR4pjYcQewnZ7RiGYRiGYRiGYRiGYRiG+RtIS4sVjKK8yfY6ZE0ezQ0e0pSyg9DnUExqnS4exak0YPQkGSs1QlCkzDkJ4faHbpujIEmlBp2EqD9G9stjd40gVRiVOsvXuGH+Wqh4Kd+okxDpc1gZn9+X8FKeYalurQe183EJL2Ublqoez6/Oepe+L3UJ0/3g0vel7rfRpe9LTcBSG0gVrq2Bm60iJZoW/eU3PpRAYw0pcWxolc8uKJ15JVHgb7a/ppoTXgmcJZGl+BGHC91JAtz3rfwKKJ1T5HCTUg9KxHQHHvTg9qSac1JKnHPF25M1VPccY+ISnYtTSuPVwyT3iaN6Z+pS4lovNU0REJkedbFPVwIiOqyVjvPuBzohD5R6rNNUznzpBCrdNJV2uxgavpgMMlEDfaeabUoRwHddRMPZerZN6p8nkoKVwqU3W3D4np5ZItEF1HrfvZ9D/f198R+LJAX/4Ha3ToIYCt9OrRGYZpALWic4o5xj80qdVn0HfvUIdtK5Vqxc0CL18E5CTnJKBB5+p4pSgyGRMfQQx9jrPbhP/Fxd6WIifKthledln22VfmgVtveutaGMok64oLU3mVFUkQsra3oreFV8sKL51dp2rqSnFhaq9SPUi6CGCqaB1kYPMUWlmuMGwVPilDrclR8iXOzNsWpCBpUcsNxaq3RpK2h9N21/b3yIcquP4QS2Tc/qRHrQBsvBM6zlu1AZdXuv5DCGPrfc6mOUwDTXLwVCMPvs67nfQBLm0FrJRs2ln0CztU9NzFYN/cR0emsTcGYNpMQKuuu5gqm1oX/qeHaxzLbsDrhsI7DVtzVT4tymmbe0Nk5g9NcrIDS2F+Ge2tXYpZraiC1Vw+BaWmOpBDGWBeaeAzX3DKQO2Fch0oP2iEVMytR9KZuwPkOwnr/iXxf1pSriIrBysHnFx4f/UjeNfzHY/Wi8WivyxCWTlEAw/Wuva1lqY6n7uOz4vtQlGLWO35e6WQYO4Chsr6DoDsDpHlVqDUv9tg6W1qGuHW4zeAnnXReEJf3424oHBV8bp5R37q5Bp6bfMjwbDNJBALBjxzmNxv5pMGinE0YH1mjcp1/uZpSKqtPKq7ujw7UqZ7tE+jaRtAIdrM03+hmGYRiGYRiGYRiGYRiG2YR/dyI3e4ub+mUAAAAASUVORK5CYII="
+                alt="CapCut"
+              />
+            </div>
+            <h3>CapCut</h3>
+            <p>Video editing & content creation</p>
+          </div>
+          <div
+            class="skill-card"
+            onclick="showSkillModal('JavaScript', 'data:image/png;base64,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', 'Saya mahir menggunakan CapCut untuk video editing, mulai dari pemotongan, penambahan efek, transisi, hingga pengolahan audio. Saya sering membuat konten video untuk media sosial dengan hasil yang berkualitas.')"
+          >
+            <div class="skill-icon">
+              <img
+                src="data:image/png;base64,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"
+                alt="JavaScript"
+              />
+            </div>
+            <h3>JavaScript</h3>
+            <p>Backend development</p>
+          </div>
+          <div
+            class="skill-card"
+            onclick="showSkillModal('Python', 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png', 'Saya memiliki pemahaman yang kuat dalam pemrograman Python, termasuk penggunaan library seperti Django, Flask, NumPy, dan Pandas. Saya telah mengembangkan berbagai aplikasi web dan tools otomatisasi menggunakan Python.')"
+          >
+            <div class="skill-icon">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/120px-Python-logo-notext.svg.png"
+                alt="Python"
+              />
+            </div>
+            <h3>Python</h3>
+            <p>Backend development & automation</p>
+          </div>
+          <div
+            class="skill-card"
+            onclick="showSkillModal('HTML', 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png', 'Saya mahir dalam HTML5 untuk membuat struktur website yang semantik dan SEO-friendly. Saya memahami penggunaan tag-tag HTML terbaru, form handling, dan integrasi dengan teknologi web lainnya.')"
+          >
+            <div class="skill-icon">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/120px-HTML5_logo_and_wordmark.svg.png"
+                alt="HTML"
+              />
+            </div>
+            <h3>HTML</h3>
+            <p>Web structure & markup language</p>
+          </div>
+          <div
+            class="skill-card"
+            onclick="showSkillModal('CSS', 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png', 'Saya memiliki keahlian dalam CSS3 untuk styling website yang responsif dan menarik. Saya mahir dalam Flexbox, Grid, animasi, dan framework CSS seperti Bootstrap dan Tailwind.')"
+          >
+            <div class="skill-icon">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/120px-CSS3_logo_and_wordmark.svg.png"
+                alt="CSS"
+              />
+            </div>
+            <h3>CSS</h3>
+            <p>Web styling & responsive design</p>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Section 4: Projects -->
     <section class="section" id="projects">
-        <div class="container">
-            <h2 class="section-title">Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <img src="Cashier.png" alt="Project 1" class="project-img">
-                    <div class="project-content">
-                        <h3>Cashier Restaurant</h3>
-                        <p>Cashier dengan fitur lengkap, payment gateway, dan dashboard admin.</p>
-                        <div class="project-buttons">
-                            <a href="https://github.com/Apakah1020/Cashier-Restaurant" target="_blank" class="project-button code-button">Code</a>
-                            <a href="https://cashier-restaurant.vercel.app/" target="_blank" class="project-button demo-button">Demo</a>
-                        </div>
-                    </div>
+      <div class="container">
+        <h2 class="section-title">Projects</h2>
+        <div class="projects-grid">
+          <div class="project-card">
+            <img src="Cashier.png" alt="Project 1" class="project-img" />
+            <div class="project-content">
+              <h3>Cashier Restaurant</h3>
+              <p>
+                Cashier dengan fitur lengkap, payment gateway, dan dashboard
+                admin.
+              </p>
+              <div class="project-buttons">
+                <a
+                  href="https://github.com/Apakah1020/Cashier-Restaurant"
+                  target="_blank"
+                  class="project-button code-button"
+                  >Code</a
+                >
+                <a
+                  href="https://cashier-restaurant.vercel.app/"
+                  target="_blank"
+                  class="project-button demo-button"
+                  >Demo</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <img src="calcul.png" alt="Project 2" class="project-img" />
+            <div class="project-content">
+              <h3>Calculator</h3>
+              <p>Sebuah web Calculator dengan beragam fitur</p>
+              <div class="project-buttons">
+                <a
+                  href="https://github.com/Apakah1020/Calculator"
+                  target="_blank"
+                  class="project-button code-button"
+                  >Code</a
+                >
+                <a
+                  href="https://calculator-zeta-tan-40.vercel.app/"
+                  target="_blank"
+                  class="project-button demo-button"
+                  >Demo</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <img src="foto ular.png" alt="Project 3" class="project-img" />
+            <div class="project-content">
+              <h3>Game ular</h3>
+              <p>Sebuah web dimana kita bisa bermain game ular</p>
+              <div class="project-buttons">
+                <a
+                  href="https://github.com/Apakah1020/Game-ular"
+                  target="_blank"
+                  class="project-button code-button"
+                  >Code</a
+                >
+                <a
+                  href="https://game-ular-gamma.vercel.app/"
+                  target="_blank"
+                  class="project-button demo-button"
+                  >Demo</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Section Ulasan -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <h2 class="section-title">Ulasan Pengunjung</h2>
+        <div class="reviews-form">
+          <div class="form-group">
+            <input
+              type="text"
+              id="reviewerName"
+              placeholder="Nama Anda"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <select id="rating">
+              <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+              <option value="4">⭐⭐⭐⭐ (4)</option>
+              <option value="3">⭐⭐⭐ (3)</option>
+              <option value="2">⭐⭐ (2)</option>
+              <option value="1">⭐ (1)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea
+              id="reviewText"
+              placeholder="Tulis ulasan Anda..."
+              required
+            ></textarea>
+          </div>
+          <button id="submitReview" class="submit-btn">Kirim Ulasan</button>
+        </div>
+        <div id="reviewsList" class="reviews-list">
+          <!-- Ulasan akan ditampilkan di sini -->
+        </div>
+      </div>
+      <!-- Modal untuk Detail Ulasan -->
+<div id="reviewModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+            <h2 class="modal-title" id="reviewModalTitle">Detail Ulasan</h2>
+        </div>
+        <div class="modal-body">
+            <div class="review-detail">
+                <div class="review-detail-header">
+                    <h3 id="reviewDetailName"></h3>
+                    <div class="review-detail-rating" id="reviewDetailRating"></div>
                 </div>
-                <div class="project-card">
-                    <img src="calcul.png" alt="Project 2" class="project-img">
-                    <div class="project-content">
-                        <h3>Calculator</h3>
-                        <p>Sebuah web Calculator dengan beragam fitur</p>
-                        <div class="project-buttons">
-                            <a href="https://github.com/Apakah1020/Calculator" target="_blank" class="project-button code-button">Code</a>
-                            <a href="https://calculator-zeta-tan-40.vercel.app/" target="_blank" class="project-button demo-button">Demo</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <img src="foto ular.png" alt="Project 3" class="project-img">
-                    <div class="project-content">
-                        <h3>Game ular</h3>
-                        <p>Sebuah web dimana kita bisa bermain game ular</p>
-                        <div class="project-buttons">
-                            <a href="https://github.com/Apakah1020/Game-ular" target="_blank" class="project-button code-button">Code</a>
-                            <a href="https://game-ular-gamma.vercel.app/" target="_blank" class="project-button demo-button">Demo</a>
-                        </div>
-                    </div>
-                </div>
+                <p id="reviewDetailText"></p>
+                <div class="review-detail-date" id="reviewDetailDate"></div>
             </div>
         </div>
+    </div>
+</div>
+
     </section>
 
     <!-- Section 5: Contact -->
     <section class="section" id="contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="social-icons">
-                <div class="social-icon" onclick="openLink('https://github.com/Apakah1020')" title="GitHub">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.37 0 0 5.37 0 12 0 17.31 3.435 21.795 8.205 23.385 8.805 23.49 9.03 23.13 9.03 22.815 9.03 22.53 9.015 21.585 9.015 20.535 5.67 21.255 4.965 19.215 4.965 19.215 4.425 17.85 3.63 17.49 3.63 17.49 2.535 16.695 3.717 16.695 3.717 16.695 4.92 16.965 5.535 18.375 5.535 18.375 6.615 20.535 8.385 20.025 9.075 19.65 9.18 18.975 9.495 18.45 9.84 18.225 7.17 17.955 4.38 16.875 4.38 12.015 4.38 10.695 4.845 9.615 5.565 8.775 5.445 8.52 4.905 7.155 5.685 5.385 5.685 5.385 6.765 5.025 9.015 6.675 9.015 6.675 10.32 6.555 11.685 6.615 13.05 6.675 15.3 5.025 16.38 5.385 16.38 5.385 17.16 7.155 16.62 8.52 16.5 8.775 17.22 9.615 17.685 10.695 17.685 12.015 17.685 16.875 14.895 17.955 12.225 18.225 12.57 18.45 12.885 18.975 12.99 19.65 13.68 20.025 14.85 20.535 15.945 18.375 16.56 16.965 17.745 16.695 17.745 16.695 16.65 17.49 15.855 17.85 15.315 19.215 15.315 19.215 14.61 21.255 11.265 20.535 11.265 20.535 11.25 21.585 11.25 22.53 11.25 22.815 11.475 23.13 12.075 23.385 16.845 21.795 20.28 17.31 20.28 12 20.28 5.37 14.91 0 8.28 0Z"/>
-                    </svg>
-                </div>
-                
-                <div class="social-icon" onclick="openLink('https://www.instagram.com/chinatsy')" title="Instagram">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                    </svg>
-                </div>
-                
-                <div class="social-icon" onclick="openLink('https://wa.me/6285715801750')" title="WhatsApp">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 001-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 001-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.434 3.488"/>
-                    </svg>
-                </div>
-                
-                <div class="social-icon" onclick="openLink('https://www.threads.net/@chinatsy')" title="Threads">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.181 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-.584-2.043-1.496-3.467-2.713-4.237-1.332-.843-3.138-1.268-5.365-1.263-2.354.024-4.18.681-5.425 1.951C5.792 5.919 5.285 8.176 5.263 10.94v.017c.022 2.766.53 5.02 1.729 6.256 1.245 1.282 3.072 1.95 5.42 1.982 2.117.026 3.759-.486 4.88-1.519.906-.835 1.459-1.954 1.647-3.33.188-1.376-.065-2.453-.755-3.207-.552-.604-1.314-1.027-2.267-1.258v-.004c.455-.297.869-.653 1.232-1.063.297-.335.543-.701.734-1.095.459 1.057.635 2.216.515 3.424-.184 1.848-.938 3.47-2.247 4.825-1.615 1.671-3.887 2.519-6.756 2.519-.007 0-.014 0-.021 0zm2.711-14.832c-.672-.299-1.4-.449-2.169-.449-1.066 0-1.956.35-2.649.943-.693.594-1.127 1.315-1.295 2.148-.182.904-.012 1.798.506 2.66.518.863 1.311 1.458 2.357 1.769.35.103.717.155 1.088.154.808 0 1.565-.168 2.251-.502.688-.334 1.243-.792 1.653-1.364.41-.572.616-1.199.616-1.869 0-.839-.233-1.58-.698-2.204-.464-.624-1.074-1.038-1.811-1.232-.737-.195-1.513-.137-2.309.172-.797.309-1.387.811-1.757 1.496-.37.686-.397 1.435-.082 2.228.169.426.419.804.741 1.124.322.32.694.569 1.106.741.411.171.847.251 1.297.238l.104-1.037c-.354.011-.701-.045-1.032-.169-.33-.123-.622-.295-.867-.513-.245-.218-.436-.476-.567-.766-.234-.517-.225-1.054.027-1.595.252-.541.678-.913 1.267-1.106.588-.193 1.192-.147 1.795.138.603.285 1.057.693 1.353 1.213.296.52.344 1.072.142 1.645-.201.573-.594.965-1.168 1.165-.574.2-1.163.075-1.752-.372-.31-.235-.54-.539-.686-.904-.146-.365-.117-.743.087-1.125.204-.382.543-.665.998-.838.456-.172.904-.164 1.331.027.052.023.101.049.149.075l.461-.921c-.12-.06-.243-.113-.369-.158z"/>
-                    </svg>
-                </div>
-                
-                <div class="social-icon" onclick="openLink('mailto:yogaferdiansy@gmail.com')" title="Gmail">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
-                    </svg>
-                </div>
-            </div>
-            <p class="contact-text">come on contact me, i need your help to improve my website</p>
+      <div class="container">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="social-icons">
+          <div
+            class="social-icon"
+            onclick="openLink('https://github.com/Apakah1020')"
+            title="GitHub"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12 0 17.31 3.435 21.795 8.205 23.385 8.805 23.49 9.03 23.13 9.03 22.815 9.03 22.53 9.015 21.585 9.015 20.535 5.67 21.255 4.965 19.215 4.965 19.215 4.425 17.85 3.63 17.49 3.63 17.49 2.535 16.695 3.717 16.695 3.717 16.695 4.92 16.965 5.535 18.375 5.535 18.375 6.615 20.535 8.385 20.025 9.075 19.65 9.18 18.975 9.495 18.45 9.84 18.225 7.17 17.955 4.38 16.875 4.38 12.015 4.38 10.695 4.845 9.615 5.565 8.775 5.445 8.52 4.905 7.155 5.685 5.385 5.685 5.385 6.765 5.025 9.015 6.675 9.015 6.675 10.32 6.555 11.685 6.615 13.05 6.675 15.3 5.025 16.38 5.385 16.38 5.385 17.16 7.155 16.62 8.52 16.5 8.775 17.22 9.615 17.685 10.695 17.685 12.015 17.685 16.875 14.895 17.955 12.225 18.225 12.57 18.45 12.885 18.975 12.99 19.65 13.68 20.025 14.85 20.535 15.945 18.375 16.56 16.965 17.745 16.695 17.745 16.695 16.65 17.49 15.855 17.85 15.315 19.215 15.315 19.215 14.61 21.255 11.265 20.535 11.265 20.535 11.25 21.585 11.25 22.53 11.25 22.815 11.475 23.13 12.075 23.385 16.845 21.795 20.28 17.31 20.28 12 20.28 5.37 14.91 0 8.28 0Z"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="social-icon"
+            onclick="openLink('https://www.instagram.com/chinatsy')"
+            title="Instagram"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="social-icon"
+            onclick="openLink('https://wa.me/6285715801750')"
+            title="WhatsApp"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 001-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 001-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.434 3.488"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="social-icon"
+            onclick="openLink('https://www.threads.net/@chinatsy')"
+            title="Threads"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.181 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-.584-2.043-1.496-3.467-2.713-4.237-1.332-.843-3.138-1.268-5.365-1.263-2.354.024-4.18.681-5.425 1.951C5.792 5.919 5.285 8.176 5.263 10.94v.017c.022 2.766.53 5.02 1.729 6.256 1.245 1.282 3.072 1.95 5.42 1.982 2.117.026 3.759-.486 4.88-1.519.906-.835 1.459-1.954 1.647-3.33.188-1.376-.065-2.453-.755-3.207-.552-.604-1.314-1.027-2.267-1.258v-.004c.455-.297.869-.653 1.232-1.063.297-.335.543-.701.734-1.095.459 1.057.635 2.216.515 3.424-.184 1.848-.938 3.47-2.247 4.825-1.615 1.671-3.887 2.519-6.756 2.519-.007 0-.014 0-.021 0zm2.711-14.832c-.672-.299-1.4-.449-2.169-.449-1.066 0-1.956.35-2.649.943-.693.594-1.127 1.315-1.295 2.148-.182.904-.012 1.798.506 2.66.518.863 1.311 1.458 2.357 1.769.35.103.717.155 1.088.154.808 0 1.565-.168 2.251-.502.688-.334 1.243-.792 1.653-1.364.41-.572.616-1.199.616-1.869 0-.839-.233-1.58-.698-2.204-.464-.624-1.074-1.038-1.811-1.232-.737-.195-1.513-.137-2.309.172-.797.309-1.387.811-1.757 1.496-.37.686-.397 1.435-.082 2.228.169.426.419.804.741 1.124.322.32.694.569 1.106.741.411.171.847.251 1.297.238l.104-1.037c-.354.011-.701-.045-1.032-.169-.33-.123-.622-.295-.867-.513-.245-.218-.436-.476-.567-.766-.234-.517-.225-1.054.027-1.595.252-.541.678-.913 1.267-1.106.588-.193 1.192-.147 1.795.138.603.285 1.057.693 1.353 1.213.296.52.344 1.072.142 1.645-.201.573-.594.965-1.168 1.165-.574.2-1.163.075-1.752-.372-.31-.235-.54-.539-.686-.904-.146-.365-.117-.743.087-1.125.204-.382.543-.665.998-.838.456-.172.904-.164 1.331.027.052.023.101.049.149.075l.461-.921c-.12-.06-.243-.113-.369-.158z"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="social-icon"
+            onclick="openLink('mailto:yogaferdiansy@gmail.com')"
+            title="Gmail"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"
+              />
+            </svg>
+          </div>
         </div>
+        <p class="contact-text">
+          come on contact me, i need your help to improve my website
+        </p>
+      </div>
     </section>
+
+<!-- Section Buku Tamu (sekarang di awal) -->
+<section class="section active" id="guestbook">
+    <div class="container">
+        <h2 class="section-title">Buku Tamu</h2>
+        <p class="section-subtitle">Silakan isi buku tamu sebelum menjelajahi website saya</p>
+        <div class="guestbook-form">
+            <div class="form-group">
+                <input type="text" id="guestName" placeholder="Nama Anda" required>
+            </div>
+            <div class="form-group">
+                <textarea id="guestMessage" placeholder="Tinggalkan pesan..." required></textarea>
+            </div>
+            <button id="submitGuestbook" class="submit-btn">Kirim</button>
+            <button id="skipGuestbook" class="skip-btn">Lewati</button>
+        </div>
+    </div>
+</section>
+
+<!-- Section Hero (sekarang setelah buku tamu) -->
+<section class="section hero" id="home">
+    <!-- ... kode hero section yang sudah ada ... -->
+</section>
+
+<!-- Section Daftar Tamu (baru) -->
+<section class="section" id="guestbook-list">
+    <div class="container">
+        <h2 class="section-title">Daftar Tamu</h2>
+        <div id="guestbookEntries" class="guestbook-entries">
+            <!-- Entri buku tamu akan ditampilkan di sini -->
+        </div>
+    </div>
+</section>
 
     <!-- Footer with Copyright -->
     <footer class="footer">
-        <div class="container">
-            <p class="copyright">&copy; <span id="currentYear"></span> <span>Inayattullah Yoga F</span>. All rights reserved.</p>
-        </div>
+      <div class="container">
+        <p class="copyright">
+          &copy; <span id="currentYear"></span>
+          <span>Inayattullah Yoga F</span>. All rights reserved.
+        </p>
+      </div>
     </footer>
 
     <!-- Modal for Skill Description -->
     <div id="skillModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                <div class="modal-icon" id="modalIcon"></div>
-                <h2 class="modal-title" id="modalTitle"></h2>
-            </div>
-            <p class="modal-description" id="modalDescription"></p>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+          <div class="modal-icon" id="modalIcon"></div>
+          <h2 class="modal-title" id="modalTitle"></h2>
         </div>
+        <p class="modal-description" id="modalDescription"></p>
+      </div>
     </div>
 
-    <script src="./buatulangan.js">
-        
+    <script src="./buatulangan.js"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyCWeObbf5xtQQLwK7EJRlevQoIKdKoMwFk",
+        authDomain: "portofolioo-36017.firebaseapp.com",
+        projectId: "portofolioo-36017",
+        storageBucket: "portofolioo-36017.firebasestorage.app",
+        messagingSenderId: "1066211272853",
+        appId: "1:1066211272853:web:3235e65d26a6b004cd139c",
+        measurementId: "G-DWD3S537JF",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
     </script>
-</body>
+  </body>
 </html>
