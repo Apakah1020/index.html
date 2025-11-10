@@ -1120,3 +1120,101 @@ const firebaseConfig = {
     appId: "YOUR_APP_ID"
 };
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Cek apakah pengguna sudah mengisi buku tamu
+    const hasVisited = localStorage.getItem('hasVisited');
+    const guestbookSection = document.getElementById('guestbook');
+    
+    if (hasVisited) {
+        // Jika sudah pernah mengisi, sembunyikan buku tamu
+        guestbookSection.style.display = 'none';
+    } else {
+        // Jika belum, tampilkan buku tamu dan disable scroll
+        document.body.style.overflow = 'hidden';
+        
+        // Tangani tombol Confirm
+        document.getElementById('submitGuestbook').addEventListener('click', function() {
+            const name = document.getElementById('guestName').value.trim();
+            
+            if (name) {
+                // Simpan nama ke localStorage
+                localStorage.setItem('visitorName', name);
+                localStorage.setItem('hasVisited', 'true');
+                
+                // Sembunyikan buku tamu dengan animasi
+                guestbookSection.style.opacity = '0';
+                guestbookSection.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => {
+                    guestbookSection.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    
+                    // Tampilkan notifikasi selamat datang
+                    showNotification(`Selamat datang, ${name}!`);
+                }, 500);
+            } else {
+                showNotification('Silakan masukkan nama Anda');
+            }
+        });
+        
+        // Tangani tombol Skip
+        document.getElementById('skipGuestbook').addEventListener('click', function() {
+            localStorage.setItem('hasVisited', 'true');
+            
+            // Sembunyikan buku tamu dengan animasi
+            guestbookSection.style.opacity = '0';
+            guestbookSection.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                guestbookSection.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 500);
+        });
+    }
+    
+    // Fungsi untuk menampilkan notifikasi
+    function showNotification(message) {
+        // Cek apakah notifikasi sudah ada
+        let notification = document.querySelector('.notification');
+        
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.className = 'notification';
+            document.body.appendChild(notification);
+        }
+        
+        notification.textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+    
+    // Tambahkan CSS untuk notifikasi jika belum ada
+    if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #8b5cf6, #7209b7);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .notification.show {
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
