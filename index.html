@@ -340,6 +340,12 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, rgba(12, 12, 29, 0.9) 0%, rgba(26, 13, 46, 0.9) 15%, rgba(22, 33, 62, 0.9) 30%, rgba(30, 58, 95, 0.9) 45%, rgba(45, 53, 97, 0.9) 60%, rgba(83, 52, 131, 0.9) 75%, rgba(114, 9, 183, 0.9) 90%, rgba(86, 11, 173, 0.9) 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
 }
 
 .section-subtitle {
@@ -2012,6 +2018,21 @@
     <!-- Background Bintang -->
     <canvas id="starfield"></canvas>
 
+    <!-- Section Buku Tamu (di awal seperti login) -->
+    <section class="section active" id="guestbook">
+      <div class="container">
+        <h2 class="section-title">Buku Tamu</h2>
+        <p class="section-subtitle">Silakan isi nama Anda sebelum menjelajahi website saya</p>
+        <div class="guestbook-form">
+          <div class="form-group">
+            <input type="text" id="guestName" placeholder="Nama Anda" required>
+          </div>
+          <button id="submitGuestbook" class="submit-btn">Confirm</button>
+          <button id="skipGuestbook" class="skip-btn">Skip</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Dynamic Island Navbar -->
     <nav class="navbar">
       <ul class="nav-links">
@@ -2052,7 +2073,7 @@
     </div>
 
     <!-- Section 1: Hero/Introduction -->
-    <section class="section active hero" id="home">
+    <section class="section hero" id="home">
       <div class="floating-elements">
         <div
           class="floating-element"
@@ -2118,7 +2139,7 @@
             </p>
           </div>
           <div class="about-image">
-            <img src="foto.JPG" alt="Profile" class="profile-img" />
+            <img src="yoga.JPG" alt="Profile" class="profile-img" />
 
             <!-- Skill Icons Orbit Popup -->
             <div class="skill-orbit-popup">
@@ -2467,39 +2488,6 @@
         </p>
       </div>
     </section>
-
-<!-- Section Buku Tamu (sekarang di awal) -->
-<section class="section active" id="guestbook">
-    <div class="container">
-        <h2 class="section-title">Buku Tamu</h2>
-        <p class="section-subtitle">Silakan isi buku tamu sebelum menjelajahi website saya</p>
-        <div class="guestbook-form">
-            <div class="form-group">
-                <input type="text" id="guestName" placeholder="Nama Anda" required>
-            </div>
-            <div class="form-group">
-                <textarea id="guestMessage" placeholder="Tinggalkan pesan..." required></textarea>
-            </div>
-            <button id="submitGuestbook" class="submit-btn">Kirim</button>
-            <button id="skipGuestbook" class="skip-btn">Lewati</button>
-        </div>
-    </div>
-</section>
-
-<!-- Section Hero (sekarang setelah buku tamu) -->
-<section class="section hero" id="home">
-    <!-- ... kode hero section yang sudah ada ... -->
-</section>
-
-<!-- Section Daftar Tamu (baru) -->
-<section class="section" id="guestbook-list">
-    <div class="container">
-        <h2 class="section-title">Daftar Tamu</h2>
-        <div id="guestbookEntries" class="guestbook-entries">
-            <!-- Entri buku tamu akan ditampilkan di sini -->
-        </div>
-    </div>
-</section>
 
     <!-- Footer with Copyright -->
     <footer class="footer">
